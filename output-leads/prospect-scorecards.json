@@ -1,0 +1,407 @@
+[
+  {
+    "prospect_id": "01-bavaria-motors",
+    "company_name": "Bavaria Motors GmbH",
+    "industry": "Automotive Tier 1 (powertrain components)",
+    "region": "Bavaria (Ingolstadt)",
+    "headcount": 220,
+    "revenue_meur": 78,
+    "ebit_margin_pct": 7.2,
+    "growth_profile": "Growing",
+    "ownership_type": "Family-owned 2nd gen",
+    "total_score": 94,
+    "priority": "High",
+    "factor_scores": {
+      "financial_fit": { "score": 5, "justification": "€78M revenue and 7.2% EBIT margin place Bavaria Motors squarely in the KUKA sweet spot for mid-market automotive suppliers with healthy margins and capex capacity." },
+      "headcount_fit": { "score": 5, "justification": "220 employees is ideal for KUKA's Mittelstand ICP — large enough to justify multi-cell deployments, small enough to lack in-house robotics expertise." },
+      "industry_automation_intensity": { "score": 5, "justification": "Automotive Tier 1 powertrain components is KUKA's heartland; arc welding, machine loading, and assembly are proven applications with off-the-shelf cells." },
+      "look_alike": { "score": 5, "closest_customer": "Schneider Präzisionsteile", "similarity_pct": 85, "justification": "Same region (Bavaria), same industry (automotive Tier 1), family-owned, similar headcount. Schneider runs 12 KUKA robots and is a willing reference." },
+      "stakeholder_identifiability": { "score": 5, "justification": "VP Production is the textbook entry point for KUKA manufacturing automation. Dr. Kurz is new in role (Jan 2026 from ZF) and likely looking for early wins." },
+      "contact_completeness": { "score": 5, "justification": "Direct email and phone confirmed. LinkedIn profile active. Three alternates identified including family owner." },
+      "trigger_events": { "score": 5, "justification": "Four concurrent triggers: BMW i-series contract (Feb 2026), modernisation programme (Mar 2026), new VP Production (Jan 2026), and acute welder shortage." }
+    },
+    "recommended_stakeholder": {
+      "name": "Dr. Martin Kurz",
+      "title": "VP Production",
+      "email": "m.kurz@bavaria-motors.de",
+      "phone": "+49 841 555 1202",
+      "rule_applied": "VP/Director Production or Operations is the primary entry point for manufacturing automation at Tier 1 automotive suppliers",
+      "alternates": [
+        { "name": "Hans-Peter Weidmann", "title": "CEO (family owner)" },
+        { "name": "Claudia Berger", "title": "CFO" }
+      ]
+    },
+    "estimated_deal_value_keur": 430,
+    "trigger_events": [
+      "BMW i-series contract awarded Feb 2026 — requires new welding line capacity",
+      "\"Zukunft der Fertigung\" modernisation programme announced Mar 2026",
+      "VP Production joined Jan 2026 from ZF — change agent in seat",
+      "Acute skilled welder shortage — cannot staff manual welding lines"
+    ],
+    "cheat_sheet_path": "cheat-sheets/01-bavaria-motors.md"
+  },
+  {
+    "prospect_id": "02-sueddeutsche-elektronik",
+    "company_name": "Süddeutsche Elektronik Montage GmbH",
+    "industry": "Electronics (EMS/PCB assembly)",
+    "region": "Bavaria (Regensburg)",
+    "headcount": 130,
+    "revenue_meur": 38,
+    "ebit_margin_pct": 5.8,
+    "growth_profile": "Growing",
+    "ownership_type": "PE-backed",
+    "total_score": 91,
+    "priority": "High",
+    "factor_scores": {
+      "financial_fit": { "score": 4, "justification": "€38M revenue with 5.8% EBIT is solid but margin is slightly below automotive peers; PE backing ensures capex availability for automation investments." },
+      "headcount_fit": { "score": 5, "justification": "130 employees fits the KUKA mid-market sweet spot — enough volume to justify automation, manual enough to show dramatic ROI." },
+      "industry_automation_intensity": { "score": 5, "justification": "EMS/PCB assembly is a high-automation-intensity sector; pick-and-place, soldering, inspection, and testing are prime KUKA cobot applications." },
+      "look_alike": { "score": 5, "closest_customer": "Novara Technologies", "similarity_pct": 92, "justification": "Novara Technologies is a near-identical match: electronics assembly, similar scale, PE-backed, running KUKA cobots for PCB handling and testing." },
+      "stakeholder_identifiability": { "score": 5, "justification": "VP Operations is the ideal entry point. Yuki Tanaka joined Dec 2025 from Foxconn — deeply familiar with automation and likely benchmarking against her former employer." },
+      "contact_completeness": { "score": 5, "justification": "Direct email, phone, and LinkedIn confirmed. Four alternates identified including CEO, CTO, and CFO." },
+      "trigger_events": { "score": 5, "justification": "Four strong triggers: new VP Ops from Foxconn (Dec 2025), €5M Industry 4.0 investment (Mar 2026), Bosch ECU contract with <0.3% defect requirement (Jan 2026), PE demanding 60% EBITDA improvement." }
+    },
+    "recommended_stakeholder": {
+      "name": "Yuki Tanaka",
+      "title": "VP Operations",
+      "email": "y.tanaka@sem-regensburg.de",
+      "phone": "+49 941 789 2205",
+      "rule_applied": "VP Operations with Foxconn background will benchmark against world-class automation; ideal entry point for KUKA electronics solutions",
+      "alternates": [
+        { "name": "Dr. Franziska Lehmann", "title": "CEO" },
+        { "name": "Rainer Stöhr", "title": "CTO / Co-founder" },
+        { "name": "Christine Bauer", "title": "CFO" }
+      ]
+    },
+    "estimated_deal_value_keur": 400,
+    "trigger_events": [
+      "VP Operations joined Dec 2025 from Foxconn — automation-native leader now in charge",
+      "€5M Industry 4.0 investment announced Mar 2026",
+      "Bosch ECU contract won Jan 2026 with <0.3% defect rate requirement",
+      "PE owner demanding 60% EBITDA improvement — automation is the lever"
+    ],
+    "cheat_sheet_path": "cheat-sheets/02-sueddeutsche-elektronik.md"
+  },
+  {
+    "prospect_id": "03-precision-aero",
+    "company_name": "PrecisionAero Components GmbH",
+    "industry": "Aerospace (structural parts)",
+    "region": "Hamburg",
+    "headcount": 175,
+    "revenue_meur": 68,
+    "ebit_margin_pct": 8.5,
+    "growth_profile": "Growing",
+    "ownership_type": "PE-backed (Nordstern Capital)",
+    "total_score": 88,
+    "priority": "High",
+    "factor_scores": {
+      "financial_fit": { "score": 5, "justification": "€68M revenue with 8.5% EBIT is strong; PE backing (Nordstern Capital) means both capex appetite and pressure to improve EBITDA through automation." },
+      "headcount_fit": { "score": 5, "justification": "175 employees is well within KUKA's manufacturing ICP; large enough for multi-robot deployments across the new CNC hall." },
+      "industry_automation_intensity": { "score": 5, "justification": "Aerospace structural parts require CNC machine loading, part handling, and deburring — all proven KUKA applications with strict traceability requirements that favour integrated solutions." },
+      "look_alike": { "score": 4, "closest_customer": "Hartmann Metallbau", "similarity_pct": 78, "justification": "Hartmann Metallbau is the closest match — heavy CNC machining, 15 KUKA robots, lighthouse customer. Slightly different end-market (general engineering vs. aerospace) lowers similarity." },
+      "stakeholder_identifiability": { "score": 5, "justification": "COO/Plant Manager is the decision-maker for production automation. Katrin Vogt controls the new CNC hall buildout and reports directly to the PE-appointed CEO." },
+      "contact_completeness": { "score": 5, "justification": "Direct email, phone, and LinkedIn confirmed. Four alternates identified including CEO, CFO, and Head of CNC Ops." },
+      "trigger_events": { "score": 5, "justification": "Four triggers: Airbus A350 wing-rib subcontract (Dec 2025, €15M/3yr), new CNC hall (Q3 2026), CEO's Industry 4.0 blog (Jan 2026), PE pushing EBITDA improvement." }
+    },
+    "recommended_stakeholder": {
+      "name": "Katrin Vogt",
+      "title": "COO / Plant Manager",
+      "email": "k.vogt@precisionaero.de",
+      "phone": "+49 40 678 4402",
+      "rule_applied": "COO/Plant Manager controls new facility buildout and is the primary automation decision-maker at PE-backed manufacturers",
+      "alternates": [
+        { "name": "Dr. Michael Brandt", "title": "CEO" },
+        { "name": "Lars Henriksen", "title": "CFO" },
+        { "name": "Thomas Richter", "title": "Head of CNC Operations" }
+      ]
+    },
+    "estimated_deal_value_keur": 350,
+    "trigger_events": [
+      "Airbus A350 wing-rib subcontract awarded Dec 2025 — €15M over 3 years, requires capacity expansion",
+      "New CNC hall under construction, operational Q3 2026 — greenfield automation opportunity",
+      "CEO published 'Industry 4.0 roadmap' blog Jan 2026 — signalling automation intent",
+      "PE owner (Nordstern Capital) pushing EBITDA improvement through operational efficiency"
+    ],
+    "cheat_sheet_path": "cheat-sheets/04-precision-aero.md"
+  },
+  {
+    "prospect_id": "04-rhein-pharma",
+    "company_name": "RheinPharma Produktions GmbH",
+    "industry": "Pharmaceutical manufacturing",
+    "region": "NRW (Leverkusen)",
+    "headcount": 145,
+    "revenue_meur": 52,
+    "ebit_margin_pct": 9.1,
+    "growth_profile": "Growing",
+    "ownership_type": "Founder-led",
+    "total_score": 84,
+    "priority": "High",
+    "factor_scores": {
+      "financial_fit": { "score": 5, "justification": "€52M revenue with 9.1% EBIT margin is excellent; strong margins indicate pricing power and capacity to invest in automation without external financing." },
+      "headcount_fit": { "score": 4, "justification": "145 employees is within the ICP but pharma's lower robot-density-per-employee means the addressable automation footprint is slightly smaller than an equivalent automotive firm." },
+      "industry_automation_intensity": { "score": 5, "justification": "Pharmaceutical packaging, serialisation, and cleanroom handling are high-automation-intensity applications where KUKA's cleanroom-rated robots (KR AGILUS, LBR iisy) have strong positioning." },
+      "look_alike": { "score": 5, "closest_customer": "Bayer Pharma-Pack", "similarity_pct": 90, "justification": "Bayer Pharma-Pack is an excellent match: same region (NRW), same industry (pharma packaging), GMP-compliant, running 6 KUKA robots in cleanroom environments." },
+      "stakeholder_identifiability": { "score": 5, "justification": "Head of Production is the primary decision-maker for packaging line automation. Markus Fischer controls the serialisation and cleanroom expansion projects." },
+      "contact_completeness": { "score": 5, "justification": "Direct email, phone, and LinkedIn confirmed. Two alternates identified including CEO/Founder and VP Quality." },
+      "trigger_events": { "score": 4, "justification": "Three triggers: serialisation compliance deadline Q4 2026, new cleanroom wing opened Nov 2025, three CDMO contracts signed Jan 2026. Slightly less urgent than competitors with PE pressure." }
+    },
+    "recommended_stakeholder": {
+      "name": "Markus Fischer",
+      "title": "Head of Production",
+      "email": "m.fischer@rheinpharma.de",
+      "phone": "+49 214 876 1103",
+      "rule_applied": "Head of Production is the primary entry point for pharma packaging automation; controls both serialisation compliance and cleanroom expansion",
+      "alternates": [
+        { "name": "Dr. Anna Reinhardt", "title": "CEO / Founder" },
+        { "name": "Prof. Dr. Jörg Kellner", "title": "VP Quality" }
+      ]
+    },
+    "estimated_deal_value_keur": 310,
+    "trigger_events": [
+      "EU serialisation compliance deadline Q4 2026 — automated track-and-trace required",
+      "New cleanroom wing opened Nov 2025 — needs automated handling equipment",
+      "Three new CDMO contracts signed Jan 2026 — packaging capacity must scale"
+    ],
+    "cheat_sheet_path": "cheat-sheets/02-rhein-pharma.md"
+  },
+  {
+    "prospect_id": "05-norddeutsche-schweisstechnik",
+    "company_name": "Norddeutsche Schweißtechnik GmbH",
+    "industry": "Metal fabrication (welding/steel construction)",
+    "region": "Bremen",
+    "headcount": 78,
+    "revenue_meur": 24,
+    "ebit_margin_pct": 5.1,
+    "growth_profile": "Stable",
+    "ownership_type": "Family-owned (founder retiring)",
+    "total_score": 79,
+    "priority": "High",
+    "factor_scores": {
+      "financial_fit": { "score": 3, "justification": "€24M revenue with 5.1% EBIT is modest; capex capacity is constrained but leasing/financing options can bridge the gap for a first cell." },
+      "headcount_fit": { "score": 4, "justification": "78 employees is at the smaller end of the ICP but well-suited for a 1-2 robot cell entry; the acute welder shortage makes automation existential." },
+      "industry_automation_intensity": { "score": 4, "justification": "Welding and steel construction is a core KUKA application; arc welding robots have proven ROI but the custom nature of steel construction requires flexible programming." },
+      "look_alike": { "score": 4, "closest_customer": "Hartmann Metallbau", "similarity_pct": 82, "justification": "Hartmann Metallbau is a strong match: same industry (metal fabrication), similar scale originally, now 15 KUKA robots. Provides a clear growth trajectory reference." },
+      "stakeholder_identifiability": { "score": 5, "justification": "Markus Johannsen (Deputy MD, founder's son) is taking over the business and has already shown buying intent by visiting KUKA open day. Perfect timing for a first automation investment." },
+      "contact_completeness": { "score": 5, "justification": "Direct email, phone, and LinkedIn confirmed. Two alternates identified including retiring founder and master welder." },
+      "trigger_events": { "score": 5, "justification": "Five strong triggers: 3 welders retiring 2026-2027, generational succession, KUKA open day visit (Oct 2025), blog post on automation (Feb 2026), Deutsche Bahn bridge framework (Jan 2026)." }
+    },
+    "recommended_stakeholder": {
+      "name": "Markus Johannsen",
+      "title": "Deputy Managing Director",
+      "email": "m.johannsen@nds-schweisstechnik.de",
+      "phone": "+49 421 334 5502",
+      "rule_applied": "Successor/incoming MD in generational transition is the primary decision-maker; has already demonstrated buying intent via KUKA open day visit",
+      "alternates": [
+        { "name": "Klaus Johannsen", "title": "CEO / Founder (retiring)" },
+        { "name": "Heiko Brandt", "title": "Welding Foreman / Master Welder" }
+      ]
+    },
+    "estimated_deal_value_keur": 250,
+    "trigger_events": [
+      "Three experienced welders retiring 2026-2027 — irreplaceable skills leaving",
+      "Generational succession: son Markus taking over from founder Klaus",
+      "Markus visited KUKA open day Oct 2025 — demonstrated buying intent",
+      "Blog post 'Warum wir automatisieren müssen' published Feb 2026 — public commitment to automation",
+      "Deutsche Bahn bridge framework contract won Jan 2026 — requires consistent welding capacity"
+    ],
+    "cheat_sheet_path": "cheat-sheets/05-norddeutsche-schweisstechnik.md"
+  },
+  {
+    "prospect_id": "06-mueller-kunststofftechnik",
+    "company_name": "Müller Kunststofftechnik GmbH",
+    "industry": "Plastics injection moulding",
+    "region": "Baden-Württemberg (Pforzheim)",
+    "headcount": 62,
+    "revenue_meur": 18,
+    "ebit_margin_pct": 6.3,
+    "growth_profile": "Growing fast",
+    "ownership_type": "Founder-led",
+    "total_score": 76,
+    "priority": "High",
+    "factor_scores": {
+      "financial_fit": { "score": 4, "justification": "€18M revenue with 6.3% EBIT and fast growth trajectory. Small but healthy margins and growth momentum suggest capex willingness, especially with Continental and B. Braun as customers." },
+      "headcount_fit": { "score": 4, "justification": "62 employees is at the lower end of the ICP but fast growth (+29% in 3 years) means they'll hit 80+ within 2 years; cobot entry point is ideal for this size." },
+      "industry_automation_intensity": { "score": 4, "justification": "Injection moulding machine tending is a proven KUKA cobot application; repetitive part removal, inspection, and packaging are ideal for LBR iisy deployment." },
+      "look_alike": { "score": 3, "closest_customer": "Schneider Präzisionsteile", "similarity_pct": 65, "justification": "Schneider is the closest match as a BaWü-based automotive supplier, but is metalworking not plastics. Lower similarity but the SME automation journey is transferable." },
+      "stakeholder_identifiability": { "score": 4, "justification": "CEO/Founder is the sole decision-maker at this size. Dirk Müller controls all capex decisions; Nina Hartwig (Technical Director) is the technical influencer." },
+      "contact_completeness": { "score": 5, "justification": "Direct email and phone confirmed for both Dirk Müller and Nina Hartwig." },
+      "trigger_events": { "score": 4, "justification": "Three triggers: Continental Tier 2 approval (Oct 2025), B. Braun medical client requiring cleanroom standards, headcount grew 29% in 3 years indicating manual processes can't keep up." }
+    },
+    "recommended_stakeholder": {
+      "name": "Dirk Müller",
+      "title": "CEO / Founder",
+      "email": "d.mueller@mueller-kunststoff.de",
+      "phone": "+49 7231 445 601",
+      "rule_applied": "At sub-100 employee founder-led companies, the CEO/Founder is the sole capex decision-maker and must be the primary contact",
+      "alternates": [
+        { "name": "Nina Hartwig", "title": "Technical Director" }
+      ]
+    },
+    "estimated_deal_value_keur": 220,
+    "trigger_events": [
+      "Continental Tier 2 supplier approval Oct 2025 — quality demands require consistent automated handling",
+      "B. Braun medical client — cleanroom-grade requirements on the horizon",
+      "Headcount grew 29% in 3 years — manual processes can't scale further"
+    ],
+    "cheat_sheet_path": "cheat-sheets/05-mueller-kunststoff.md"
+  },
+  {
+    "prospect_id": "07-alpen-feinkost",
+    "company_name": "Alpen Feinkost GmbH",
+    "industry": "Food processing (premium charcuterie/cheese packaging)",
+    "region": "Bavaria (Kempten/Allgäu)",
+    "headcount": 95,
+    "revenue_meur": 31,
+    "ebit_margin_pct": 4.8,
+    "growth_profile": "Stable/modest",
+    "ownership_type": "Family-owned 3rd gen",
+    "total_score": 72,
+    "priority": "High",
+    "factor_scores": {
+      "financial_fit": { "score": 3, "justification": "€31M revenue with 4.8% EBIT is adequate but margins are thin for food processing. Automation investment would need to show clear payback to justify against other capital needs." },
+      "headcount_fit": { "score": 4, "justification": "95 employees is well within the ICP; seasonal labour dependency makes the effective automation-addressable workforce larger than headcount suggests." },
+      "industry_automation_intensity": { "score": 4, "justification": "Food packaging and palletising are proven KUKA applications; hygienic design robots (IP67, washdown-rated) are available but the sector is less robotics-dense than automotive." },
+      "look_alike": { "score": 3, "closest_customer": "Bayer Pharma-Pack", "similarity_pct": 55, "justification": "No direct food customer anchor. Bayer Pharma-Pack is the closest in terms of hygienic environment handling, but different industry. KUKA food & beverage case studies partially bridge the gap." },
+      "stakeholder_identifiability": { "score": 4, "justification": "CEO (3rd generation family member) is the decision-maker. Maximilian Huber runs both strategy and operations; Production Manager Wolfgang Gruber is the technical influencer." },
+      "contact_completeness": { "score": 5, "justification": "Direct email and phone confirmed for CEO. Two alternates identified including Production Manager and CFO (family member)." },
+      "trigger_events": { "score": 4, "justification": "Three triggers: lost 12 seasonal workers in 2025, Edeka contract requiring 30% volume increase, IFS hygiene audit Mar 2026. Labour crisis makes this existential." }
+    },
+    "recommended_stakeholder": {
+      "name": "Maximilian Huber",
+      "title": "CEO",
+      "email": "m.huber@alpen-feinkost.de",
+      "phone": "+49 831 567 2201",
+      "rule_applied": "At family-owned food processors, the CEO/family member is the capex decision-maker; frame automation as family legacy preservation",
+      "alternates": [
+        { "name": "Wolfgang Gruber", "title": "Production Manager" },
+        { "name": "Elisabeth Huber-Maier", "title": "CFO" }
+      ]
+    },
+    "estimated_deal_value_keur": 280,
+    "trigger_events": [
+      "Lost 12 seasonal workers in 2025 — cannot staff peak production periods",
+      "Edeka contract requires 30% volume increase — impossible to fulfil manually",
+      "IFS hygiene audit scheduled Mar 2026 — automation reduces human contamination risk"
+    ],
+    "cheat_sheet_path": "cheat-sheets/03-alpen-food.md"
+  },
+  {
+    "prospect_id": "08-weber-logistik",
+    "company_name": "Weber Logistik & Fulfillment GmbH",
+    "industry": "Warehouse logistics / e-commerce fulfillment",
+    "region": "NRW (Dortmund)",
+    "headcount": 310,
+    "revenue_meur": 42,
+    "ebit_margin_pct": 3.2,
+    "growth_profile": "Fast growth",
+    "ownership_type": "Founder-led",
+    "total_score": 58,
+    "priority": "Medium",
+    "factor_scores": {
+      "financial_fit": { "score": 3, "justification": "€42M revenue but only 3.2% EBIT margin is thin; fast growth may mask profitability challenges. Automation ROI must be framed around labour cost avoidance." },
+      "headcount_fit": { "score": 2, "justification": "310 employees is oversized for KUKA's manufacturing ICP. Logistics/warehouse is an adjacent market where KUKA has less penetration than in manufacturing." },
+      "industry_automation_intensity": { "score": 3, "justification": "Warehouse logistics automation (AGVs, picking, sorting) is growing but KUKA's core strength is manufacturing robotics. Mobile robotics and logistics are developing capabilities." },
+      "look_alike": { "score": 2, "justification": "No strong look-alike in KUKA's manufacturing customer base. Warehouse/logistics is an adjacent market with different buying patterns and decision-makers." },
+      "stakeholder_identifiability": { "score": 4, "justification": "CEO/Founder Jan Weber is the decision-maker. COO Lisa Weber and Warehouse Director Michael Braun are identified as influencers." },
+      "contact_completeness": { "score": 5, "justification": "Direct email and phone confirmed. Three contacts identified with clear roles." },
+      "trigger_events": { "score": 4, "justification": "Four triggers: DHL partnership (Nov 2025), new warehouse (Q2 2026), 28% worker turnover, Amazon competitive pressure. Strong need but outside KUKA's core ICP." }
+    },
+    "recommended_stakeholder": {
+      "name": "Jan Weber",
+      "title": "CEO",
+      "email": "j.weber@weber-logistik.de",
+      "phone": "+49 231 912 4401",
+      "rule_applied": "At founder-led logistics companies, the CEO is the primary decision-maker for major automation investments",
+      "alternates": [
+        { "name": "Lisa Weber", "title": "COO" },
+        { "name": "Michael Braun", "title": "Warehouse Director" }
+      ]
+    },
+    "estimated_deal_value_keur": 350,
+    "trigger_events": [
+      "DHL partnership signed Nov 2025 — volume commitments require automated fulfillment",
+      "New warehouse opening Q2 2026 — greenfield automation opportunity",
+      "28% annual worker turnover — labour instability threatens service levels",
+      "Amazon competing nearby — speed and accuracy are existential"
+    ],
+    "cheat_sheet_path": "cheat-sheets/08-weber-logistik.md"
+  },
+  {
+    "prospect_id": "09-bergmann-verpackungstechnik",
+    "company_name": "Bergmann Verpackungstechnik GmbH",
+    "industry": "Contract packaging (consumer goods)",
+    "region": "NRW (Bielefeld)",
+    "headcount": 42,
+    "revenue_meur": 12,
+    "ebit_margin_pct": 7.2,
+    "growth_profile": "Growing",
+    "ownership_type": "Founder-led",
+    "total_score": 56,
+    "priority": "Medium",
+    "factor_scores": {
+      "financial_fit": { "score": 3, "justification": "€12M revenue with 7.2% EBIT is healthy margin-wise but small absolute size limits the automation investment envelope. A single cobot cell is the right entry point." },
+      "headcount_fit": { "score": 3, "justification": "42 employees is below the typical KUKA ICP threshold. However, contract packaging's labour-intensity means automation impact per employee is higher than average." },
+      "industry_automation_intensity": { "score": 3, "justification": "Contract packaging has moderate automation intensity; palletising and case packing are proven applications but product variety and short runs can challenge ROI." },
+      "look_alike": { "score": 2, "closest_customer": "Bayer Pharma-Pack", "similarity_pct": 48, "justification": "Bayer Pharma-Pack is a loose match on packaging but serves pharma not FMCG. No strong direct anchor in contract consumer goods packaging." },
+      "stakeholder_identifiability": { "score": 4, "justification": "CEO/Founder Peter Bergmann is the sole decision-maker at this company size. Production Manager Torsten Lange is the technical influencer." },
+      "contact_completeness": { "score": 5, "justification": "Direct email and phone confirmed. Two contacts identified." },
+      "trigger_events": { "score": 4, "justification": "Three triggers: Henkel contract (Sep 2025), second hall completion (Apr 2026), inability to hire for night shifts. Expansion creates a natural automation moment." }
+    },
+    "recommended_stakeholder": {
+      "name": "Peter Bergmann",
+      "title": "CEO / Founder",
+      "email": "p.bergmann@bergmann-verpackung.de",
+      "phone": "+49 521 776 3301",
+      "rule_applied": "At micro-SMEs (<50 employees), the CEO/Founder is the only decision-maker for capital equipment purchases",
+      "alternates": [
+        { "name": "Torsten Lange", "title": "Production Manager" }
+      ]
+    },
+    "estimated_deal_value_keur": 200,
+    "trigger_events": [
+      "Henkel contract won Sep 2025 — volume commitment requires faster packaging lines",
+      "Second production hall completion Apr 2026 — greenfield automation opportunity",
+      "Cannot hire for night shifts — automation is the only path to 24/7 operations"
+    ],
+    "cheat_sheet_path": "cheat-sheets/09-bergmann-verpackung.md"
+  },
+  {
+    "prospect_id": "10-fischer-medizintechnik",
+    "company_name": "Fischer Medizintechnik GmbH",
+    "industry": "Medical devices (surgical instruments/implants)",
+    "region": "Baden-Württemberg (Tuttlingen)",
+    "headcount": 15,
+    "revenue_meur": 4.8,
+    "ebit_margin_pct": 3.5,
+    "growth_profile": "Fast growth",
+    "ownership_type": "Founder-led",
+    "total_score": 38,
+    "priority": "Low",
+    "factor_scores": {
+      "financial_fit": { "score": 1, "justification": "€4.8M revenue with 3.5% EBIT margin is well below the KUKA ICP. An angel-funded startup with limited capex capacity; automation investment would be disproportionate to current revenue." },
+      "headcount_fit": { "score": 1, "justification": "15 employees is far below the KUKA ICP minimum. Too small for standard robot cells; even a single cobot would represent a major capital allocation." },
+      "industry_automation_intensity": { "score": 5, "justification": "Medical devices/surgical instruments is a high-precision, high-automation-intensity sector. KUKA's cleanroom and precision capabilities are directly applicable, making this a future opportunity." },
+      "look_alike": { "score": 2, "closest_customer": "Novara Technologies", "similarity_pct": 35, "justification": "Novara Technologies is a weak match — electronics not medical devices, much larger scale. No direct medical device SME anchor in KUKA's customer base." },
+      "stakeholder_identifiability": { "score": 4, "justification": "CEO/Founder Dr. Julia Fischer is the sole decision-maker. Andreas Keller (Production Lead) handles day-to-day manufacturing." },
+      "contact_completeness": { "score": 5, "justification": "Direct email and phone confirmed. Two contacts identified." },
+      "trigger_events": { "score": 3, "justification": "Three triggers: ISO 13485 recertification (Apr 2026), FDA 510(k) submission pending, angel round (€800K, Dec 2025). Triggers exist but company is too early-stage for KUKA's current offering." }
+    },
+    "recommended_stakeholder": {
+      "name": "Dr. Julia Fischer",
+      "title": "CEO / Founder",
+      "email": "j.fischer@fischer-medtech.de",
+      "phone": "+49 7461 178 901",
+      "rule_applied": "At micro-startups, the CEO/Founder is the only decision-maker; nurture for future opportunity as the company scales",
+      "alternates": [
+        { "name": "Andreas Keller", "title": "Production Lead" }
+      ]
+    },
+    "estimated_deal_value_keur": 85,
+    "trigger_events": [
+      "ISO 13485 recertification audit Apr 2026 — quality system scrutiny may highlight manual process risks",
+      "FDA 510(k) submission pending — US market entry will require scalable production",
+      "Angel round closed €800K Dec 2025 — some capital available but prioritised for product development"
+    ],
+    "cheat_sheet_path": "cheat-sheets/10-fischer-medtech.md"
+  }
+]

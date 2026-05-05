@@ -1,0 +1,1939 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KUKA Lead-Gen Agent</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --navy: #1a2332;
+  --navy-light: #243044;
+  --white: #ffffff;
+  --g50: #f8fafc;
+  --g100: #f1f5f9;
+  --g200: #e2e8f0;
+  --g300: #cbd5e1;
+  --g400: #94a3b8;
+  --g500: #64748b;
+  --g600: #475569;
+  --g700: #334155;
+  --g800: #1e293b;
+  --orange: #f25c19;
+  --orange-h: #d94e11;
+  --orange-bg: #fff5ef;
+  --green: #16a34a;
+  --green-bg: #f0fdf4;
+  --green-h: #15803d;
+  --amber: #d97706;
+  --amber-bg: #fffbeb;
+  --red: #dc2626;
+  --red-bg: #fef2f2;
+  --purple: #7c3aed;
+  --purple-bg: #f3e8ff;
+  --radius: 12px;
+  --radius-sm: 8px;
+  --shadow: 0 1px 3px rgba(0,0,0,.1);
+  --shadow-md: 0 4px 6px rgba(0,0,0,.07), 0 2px 4px rgba(0,0,0,.05);
+  --shadow-lg: 0 10px 25px rgba(0,0,0,.1);
+  --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+
+body { font-family: var(--font); background: var(--g50); color: var(--g700); line-height: 1.5; min-height: 100vh; }
+
+/* ── Header ─────────────────────────────────────── */
+header {
+  background: var(--navy);
+  color: var(--white);
+  padding: 14px 32px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  box-shadow: 0 2px 8px rgba(0,0,0,.15);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+.logo { font-weight: 700; font-size: 1.5rem; letter-spacing: -.5px; flex-shrink: 0; }
+.logo-name { color: var(--orange); font-size: 1.65rem; }
+.header-text h1 { font-size: 1.05rem; font-weight: 600; }
+.header-text p { font-size: .8rem; color: var(--g400); }
+.header-spacer { flex: 1; }
+.header-back { color: var(--g300); cursor: pointer; font-size: .88rem; padding: 6px 12px; border-radius: var(--radius-sm); transition: all .15s; }
+.header-back:hover { color: var(--white); background: rgba(255,255,255,.08); }
+
+/* ── Layout ─────────────────────────────────────── */
+.container { max-width: 1300px; margin: 0 auto; padding: 32px 24px; }
+.screen { display: none; }
+.screen.active { display: block; }
+
+/* ── Screen 0: Input ────────────────────────────── */
+.input-title { text-align: center; margin-bottom: 8px; font-size: 1.5rem; font-weight: 700; color: var(--g800); }
+.input-subtitle { text-align: center; color: var(--g500); margin-bottom: 32px; font-size: .95rem; max-width: 720px; margin-left: auto; margin-right: auto; }
+
+.input-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 28px; }
+@media (max-width: 720px) { .input-grid { grid-template-columns: 1fr; } }
+
+.input-card {
+  border: 1px solid var(--g200);
+  border-radius: var(--radius);
+  padding: 18px 20px;
+  background: var(--white);
+  box-shadow: var(--shadow);
+  display: flex; gap: 14px;
+}
+.input-card .icon {
+  width: 40px; height: 40px; border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700; color: var(--white); flex-shrink: 0;
+  font-size: 1rem;
+}
+.input-card .body h3 { font-weight: 600; color: var(--g800); font-size: .98rem; margin-bottom: 3px; }
+.input-card .body p { font-size: .82rem; color: var(--g500); }
+.input-card .body .meta { font-size: .76rem; color: var(--g400); margin-top: 6px; }
+
+.input-card .ic-orange { background: var(--orange); }
+.input-card .ic-green { background: var(--green); }
+.input-card .ic-purple { background: var(--purple); }
+.input-card .ic-amber { background: var(--amber); }
+.input-card .ic-navy { background: var(--navy); }
+.input-card .ic-red { background: var(--red); }
+
+.run-row { display: flex; justify-content: center; gap: 16px; flex-wrap: wrap; margin-top: 12px; }
+
+.btn {
+  padding: 12px 28px;
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all .15s;
+  border: none;
+  font-size: .95rem;
+  font-family: var(--font);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.btn-primary { background: var(--orange); color: var(--white); }
+.btn-primary:hover { background: var(--orange-h); }
+.btn-primary:disabled { background: var(--g300); color: var(--g500); cursor: not-allowed; }
+.btn-secondary { background: var(--white); color: var(--g700); border: 1px solid var(--g300); }
+.btn-secondary:hover { background: var(--g50); border-color: var(--g400); }
+.btn-ghost { background: transparent; color: var(--orange); padding: 8px 12px; }
+.btn-ghost:hover { background: var(--orange-bg); }
+.btn-sm { padding: 8px 14px; font-size: .85rem; }
+
+/* ── Processing overlay ─────────────────────────── */
+.overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,.45);
+  backdrop-filter: blur(4px);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 100;
+  opacity: 0; pointer-events: none;
+  transition: opacity .3s;
+}
+.overlay.visible { opacity: 1; pointer-events: auto; }
+
+.proc-card {
+  background: var(--white); border-radius: var(--radius);
+  padding: 36px 40px; max-width: 520px; width: 90%;
+  box-shadow: var(--shadow-lg);
+  transform: translateY(20px); transition: transform .3s;
+}
+.overlay.visible .proc-card { transform: translateY(0); }
+.proc-title { font-size: 1.15rem; font-weight: 700; color: var(--g800); margin-bottom: 22px; }
+
+.step { display: flex; align-items: center; gap: 14px; padding: 9px 0; color: var(--g400); transition: color .3s; }
+.step.active { color: var(--orange); }
+.step.done { color: var(--green); }
+.step-icon { width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.step-text { font-size: .92rem; font-weight: 500; }
+.step-circle { width: 18px; height: 18px; border-radius: 50%; border: 2px solid var(--g300); }
+
+@keyframes spin { to { transform: rotate(360deg); } }
+.spinner { width: 18px; height: 18px; border: 2.5px solid var(--g200); border-top-color: var(--orange); border-radius: 50%; animation: spin .7s linear infinite; }
+.checkmark { color: var(--green); font-size: 1.15rem; font-weight: 700; }
+
+/* ── Screen 1: Pipeline ─────────────────────────── */
+.summary-banner {
+  background: linear-gradient(135deg, var(--navy), var(--navy-light));
+  color: var(--white); padding: 22px 28px; border-radius: var(--radius);
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 22px; flex-wrap: wrap; gap: 16px;
+}
+.summary-left h2 { font-size: 1.2rem; font-weight: 700; }
+.summary-left p { font-size: .88rem; color: var(--g300); margin-top: 2px; }
+.summary-stats { display: flex; gap: 24px; flex-wrap: wrap; }
+.stat { text-align: center; }
+.stat-value { font-size: 1.45rem; font-weight: 700; }
+.stat-label { font-size: .76rem; opacity: .75; margin-top: 1px; }
+.stat-value.high { color: #4ade80; }
+.stat-value.med { color: #fbbf24; }
+.stat-value.low { color: #94a3b8; }
+
+.pipeline-panel { background: var(--white); border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; }
+.pipeline-toolbar {
+  padding: 14px 22px; border-bottom: 1px solid var(--g200);
+  display: flex; gap: 12px; align-items: center; flex-wrap: wrap;
+  background: var(--g50);
+}
+.toolbar-label { font-size: .82rem; font-weight: 600; color: var(--g500); text-transform: uppercase; letter-spacing: .5px; }
+.filter-select {
+  padding: 7px 10px; border: 1px solid var(--g300); border-radius: var(--radius-sm);
+  font-family: var(--font); font-size: .85rem; color: var(--g700); background: var(--white);
+  cursor: pointer;
+}
+.filter-select:focus { outline: 2px solid var(--orange); outline-offset: -1px; }
+.toolbar-spacer { flex: 1; }
+
+.prospect-table { width: 100%; border-collapse: collapse; font-size: .88rem; }
+.prospect-table th {
+  background: var(--white); padding: 12px 14px; text-align: left;
+  font-weight: 600; color: var(--g500); text-transform: uppercase;
+  font-size: .72rem; letter-spacing: .5px; border-bottom: 2px solid var(--g200);
+  cursor: pointer; user-select: none;
+  white-space: nowrap;
+}
+.prospect-table th:hover { color: var(--g700); }
+.prospect-table th.sorted { color: var(--orange); }
+.prospect-table th.sorted::after { content: ' \25BC'; font-size: .6rem; }
+.prospect-table th.sorted.asc::after { content: ' \25B2'; }
+.prospect-table td {
+  padding: 12px 14px; border-bottom: 1px solid var(--g100);
+  vertical-align: middle; color: var(--g700);
+}
+.prospect-table tr.row { cursor: pointer; transition: background .12s; }
+.prospect-table tr.row:hover { background: var(--orange-bg); }
+.prospect-table tr.row:hover td { color: var(--g800); }
+.rank-cell { font-weight: 700; color: var(--g500); width: 36px; text-align: center; }
+.company-cell { font-weight: 600; color: var(--g800); }
+.industry-cell { font-size: .82rem; color: var(--g500); }
+.score-cell { font-weight: 700; }
+.score-cell .score-bar {
+  display: inline-block; width: 60px; height: 6px; border-radius: 3px;
+  background: var(--g200); margin-right: 8px; vertical-align: middle; overflow: hidden;
+}
+.score-cell .score-bar-fill { display: block; height: 100%; border-radius: 3px; }
+.priority-pill {
+  font-size: .72rem; font-weight: 700; padding: 3px 9px; border-radius: 10px;
+  display: inline-block; text-transform: uppercase; letter-spacing: .3px;
+}
+.pri-High { background: var(--green-bg); color: var(--green-h); }
+.pri-Medium { background: var(--amber-bg); color: var(--amber); }
+.pri-Low { background: var(--g100); color: var(--g500); }
+
+.stakeholder-chip {
+  display: inline-flex; align-items: center; gap: 6px; font-size: .82rem; color: var(--g700);
+}
+.stakeholder-chip .avatar {
+  width: 24px; height: 24px; border-radius: 50%; background: var(--orange-bg); color: var(--orange);
+  font-size: .7rem; font-weight: 700; display: inline-flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.stakeholder-chip .title { color: var(--g500); font-size: .76rem; }
+
+.premium-cell { font-weight: 600; color: var(--g800); white-space: nowrap; }
+
+/* Top action banner */
+.top-action {
+  display: flex; align-items: center; gap: 16px; padding: 16px 22px;
+  background: var(--orange-bg); border-bottom: 1px solid #fddcc8;
+}
+.top-action .pulse {
+  width: 8px; height: 8px; border-radius: 50%; background: var(--orange);
+  box-shadow: 0 0 0 0 rgba(242, 92, 25, .6);
+  animation: pulse 1.8s infinite;
+}
+@keyframes pulse {
+  0% { box-shadow: 0 0 0 0 rgba(242, 92, 25, .6); }
+  70% { box-shadow: 0 0 0 10px rgba(242, 92, 25, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(242, 92, 25, 0); }
+}
+.top-action .copy { flex: 1; font-size: .88rem; color: var(--g700); }
+.top-action .copy strong { color: var(--g800); font-weight: 700; }
+
+/* ── Screen 2: Deep dive ────────────────────────── */
+.detail-header {
+  background: var(--white); border-radius: var(--radius); box-shadow: var(--shadow);
+  padding: 22px 28px; margin-bottom: 18px;
+  display: flex; flex-wrap: wrap; gap: 24px; align-items: flex-start; justify-content: space-between;
+}
+.detail-title h2 { font-size: 1.45rem; font-weight: 700; color: var(--g800); }
+.detail-title .sub { font-size: .9rem; color: var(--g500); margin-top: 4px; }
+.detail-title .pill-row { margin-top: 10px; display: flex; gap: 8px; flex-wrap: wrap; }
+.meta-pill {
+  font-size: .76rem; font-weight: 600; padding: 4px 10px; border-radius: 10px;
+  background: var(--g100); color: var(--g600);
+}
+
+.detail-score-block { text-align: center; min-width: 220px; }
+.detail-score-num { font-size: 2.6rem; font-weight: 800; color: var(--orange); line-height: 1; }
+.detail-score-cap { font-size: .76rem; color: var(--g500); text-transform: uppercase; letter-spacing: .5px; margin-top: 2px; }
+.detail-score-bar { width: 100%; height: 8px; background: var(--g200); border-radius: 4px; overflow: hidden; margin-top: 12px; }
+.detail-score-fill { height: 100%; border-radius: 4px; }
+
+.tab-bar {
+  background: var(--white); border-radius: var(--radius) var(--radius) 0 0;
+  display: flex; border-bottom: 2px solid var(--g200);
+  overflow-x: auto; scrollbar-width: thin;
+  box-shadow: var(--shadow);
+}
+.tab {
+  padding: 14px 22px; cursor: pointer;
+  border-bottom: 3px solid transparent; margin-bottom: -2px;
+  color: var(--g500); font-weight: 500; white-space: nowrap;
+  transition: all .15s; font-size: .92rem;
+  display: flex; align-items: center; gap: 8px;
+}
+.tab:hover { color: var(--g700); background: var(--g50); }
+.tab.active { color: var(--orange); border-bottom-color: var(--orange); }
+
+.tab-content { display: none; background: var(--white); border-radius: 0 0 var(--radius) var(--radius); box-shadow: var(--shadow); padding: 26px 32px; }
+.tab-content.active { display: block; }
+
+/* Scoring tab */
+.scoring-grid { display: grid; grid-template-columns: 1.1fr 1fr; gap: 28px; }
+@media (max-width: 900px) { .scoring-grid { grid-template-columns: 1fr; } }
+
+.factor-list h3, .lookalike-card h3 { font-size: .82rem; font-weight: 700; color: var(--g500); text-transform: uppercase; letter-spacing: .5px; margin-bottom: 14px; }
+
+.factor-row { padding: 10px 0; border-bottom: 1px solid var(--g100); }
+.factor-row:last-child { border-bottom: none; }
+.factor-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
+.factor-name { font-size: .9rem; font-weight: 600; color: var(--g800); }
+.factor-name .weight { color: var(--g400); font-weight: 500; font-size: .78rem; margin-left: 4px; }
+.factor-score-pill { font-weight: 700; font-size: .82rem; padding: 2px 9px; border-radius: 8px; min-width: 36px; text-align: center; }
+.factor-score-pill.s5, .factor-score-pill.s4 { background: var(--green-bg); color: var(--green-h); }
+.factor-score-pill.s3 { background: var(--orange-bg); color: var(--orange); }
+.factor-score-pill.s2 { background: var(--amber-bg); color: var(--amber); }
+.factor-score-pill.s1, .factor-score-pill.s0 { background: var(--red-bg); color: var(--red); }
+.factor-bar { height: 6px; background: var(--g100); border-radius: 3px; overflow: hidden; margin: 6px 0 6px; }
+.factor-bar-fill { height: 100%; border-radius: 3px; }
+.factor-just { font-size: .82rem; color: var(--g500); line-height: 1.5; }
+
+.lookalike-card { background: var(--g50); border: 1px solid var(--g200); border-radius: var(--radius-sm); padding: 18px 20px; }
+.lookalike-anchor { font-size: 1.05rem; font-weight: 700; color: var(--g800); margin-bottom: 4px; }
+.lookalike-sim { display: flex; align-items: center; gap: 12px; margin-top: 12px; margin-bottom: 14px; }
+.lookalike-sim-bar { flex: 1; height: 8px; background: var(--g200); border-radius: 4px; overflow: hidden; }
+.lookalike-sim-fill { height: 100%; background: var(--orange); border-radius: 4px; }
+.lookalike-sim-pct { font-weight: 700; color: var(--orange); font-size: .92rem; }
+.lookalike-just { font-size: .85rem; color: var(--g600); line-height: 1.55; }
+.lookalike-attrs { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 14px; }
+.attr-pill { font-size: .76rem; background: var(--white); border: 1px solid var(--g200); border-radius: 10px; padding: 3px 9px; color: var(--g700); }
+
+.trigger-block { margin-top: 22px; }
+.trigger-block h3 { font-size: .82rem; font-weight: 700; color: var(--g500); text-transform: uppercase; letter-spacing: .5px; margin-bottom: 10px; }
+.trigger-list { background: var(--amber-bg); border-left: 3px solid var(--amber); border-radius: var(--radius-sm); padding: 12px 16px; }
+.trigger-list ul { padding-left: 18px; }
+.trigger-list li { font-size: .87rem; color: var(--g700); padding: 3px 0; line-height: 1.5; }
+
+/* Stakeholder tab */
+.stakeholder-primary {
+  background: linear-gradient(135deg, var(--orange-bg), #ffe8d6);
+  border: 1px solid #fddcc8;
+  border-radius: var(--radius); padding: 22px 24px;
+  display: flex; gap: 20px; align-items: flex-start; flex-wrap: wrap;
+}
+.stake-avatar {
+  width: 64px; height: 64px; border-radius: 50%; background: var(--orange); color: var(--white);
+  font-size: 1.3rem; font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.stake-info { flex: 1; min-width: 240px; }
+.stake-name { font-size: 1.2rem; font-weight: 700; color: var(--g800); }
+.stake-title { font-size: .92rem; color: var(--g600); margin-top: 1px; }
+.stake-channels { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 10px; }
+.stake-channels .ch { font-size: .85rem; color: var(--g600); display: flex; align-items: center; gap: 6px; }
+.stake-channels .ch.muted { color: var(--g400); font-style: italic; }
+
+.stake-rule {
+  background: var(--white); border: 1px solid var(--g200); border-radius: var(--radius-sm);
+  padding: 14px 18px; margin-top: 22px;
+}
+.stake-rule h4 { font-size: .76rem; font-weight: 700; color: var(--g500); text-transform: uppercase; letter-spacing: .5px; margin-bottom: 6px; }
+.stake-rule p { font-size: .9rem; color: var(--g700); line-height: 1.55; }
+
+.alternates-block { margin-top: 24px; }
+.alternates-block h3 { font-size: .82rem; font-weight: 700; color: var(--g500); text-transform: uppercase; letter-spacing: .5px; margin-bottom: 12px; }
+.alt-card {
+  display: flex; gap: 14px; padding: 14px 16px; border: 1px solid var(--g200); border-radius: var(--radius-sm);
+  margin-bottom: 8px; background: var(--white);
+}
+.alt-card .stake-avatar { width: 40px; height: 40px; font-size: .9rem; background: var(--g300); color: var(--g700); }
+.alt-card .alt-info { flex: 1; }
+.alt-card .alt-name { font-weight: 600; color: var(--g800); font-size: .92rem; }
+.alt-card .alt-title { font-size: .8rem; color: var(--g500); margin-top: 1px; }
+.alt-card .alt-reason { font-size: .82rem; color: var(--g600); margin-top: 6px; line-height: 1.5; }
+
+/* Cheat sheet tab */
+.cheat-section { margin-bottom: 22px; padding-bottom: 22px; border-bottom: 1px solid var(--g100); position: relative; }
+.cheat-section:last-child { border-bottom: none; padding-bottom: 0; }
+.cheat-section h3 { font-size: .85rem; font-weight: 700; color: var(--g500); text-transform: uppercase; letter-spacing: .5px; margin-bottom: 10px; display: flex; align-items: center; gap: 10px; }
+.cheat-section h3 .copy-btn {
+  background: transparent; border: 1px solid var(--g300); color: var(--g500);
+  font-size: .72rem; padding: 3px 10px; border-radius: 10px; cursor: pointer;
+  transition: all .15s; font-family: var(--font);
+}
+.cheat-section h3 .copy-btn:hover { border-color: var(--orange); color: var(--orange); }
+.cheat-section h3 .copy-btn.copied { background: var(--green-bg); border-color: var(--green); color: var(--green); }
+.cheat-section .body { font-size: .93rem; color: var(--g700); line-height: 1.65; }
+.cheat-section .body p { margin: 6px 0; }
+.cheat-section .body ul { padding-left: 22px; margin: 6px 0; }
+.cheat-section .body li { margin: 4px 0; }
+.cheat-section.qa-block .qa { margin: 10px 0; padding: 10px 14px; background: var(--g50); border-radius: var(--radius-sm); border-left: 3px solid var(--orange); }
+.cheat-section.qa-block .q { font-weight: 600; color: var(--g800); margin-bottom: 4px; }
+.cheat-section.qa-block .a { color: var(--g600); }
+.cheat-section.opening .body { font-style: italic; color: var(--g700); padding: 12px 16px; background: var(--orange-bg); border-radius: var(--radius-sm); border-left: 3px solid var(--orange); }
+.cheat-section.cta .body { font-weight: 600; color: var(--g800); padding: 14px 18px; background: var(--green-bg); border-radius: var(--radius-sm); border-left: 3px solid var(--green); }
+
+.call-strip {
+  background: var(--navy); color: var(--white);
+  border-radius: var(--radius); padding: 16px 22px;
+  display: flex; gap: 18px; align-items: center; flex-wrap: wrap; margin-bottom: 16px;
+}
+.call-strip .label { font-size: .72rem; color: var(--g400); text-transform: uppercase; letter-spacing: .5px; }
+.call-strip .val { font-size: .92rem; font-weight: 600; color: var(--white); }
+.call-strip .vert { width: 1px; height: 30px; background: rgba(255,255,255,.15); }
+
+/* ── Header Nav Tabs ─────────────────────────────── */
+.header-nav { display: flex; gap: 4px; }
+.header-nav-tab {
+  padding: 7px 16px;
+  border-radius: var(--radius-sm);
+  font-size: .85rem;
+  font-weight: 600;
+  color: var(--g400);
+  cursor: pointer;
+  transition: all .15s;
+  border: 1px solid transparent;
+  background: transparent;
+  font-family: var(--font);
+}
+.header-nav-tab:hover { color: var(--g200); background: rgba(255,255,255,.06); }
+.header-nav-tab.active { color: var(--white); background: rgba(255,255,255,.12); border-color: rgba(255,255,255,.15); }
+
+/* ── Integration Layer Screen ────────────────────── */
+.int-title { text-align: center; font-size: 1.5rem; font-weight: 700; color: var(--g800); margin-bottom: 6px; }
+.int-subtitle { text-align: center; color: var(--g500); font-size: .92rem; max-width: 780px; margin: 0 auto 32px; line-height: 1.6; }
+
+.int-stats-banner {
+  background: linear-gradient(135deg, var(--navy), var(--navy-light));
+  color: var(--white); padding: 22px 28px; border-radius: var(--radius);
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 28px; flex-wrap: wrap; gap: 16px;
+}
+.int-stats-banner .stat { text-align: center; }
+.int-stats-banner .stat-value { font-size: 1.45rem; font-weight: 700; }
+.int-stats-banner .stat-label { font-size: .76rem; opacity: .75; margin-top: 1px; }
+.int-stats-banner .stat-value.conn { color: #4ade80; }
+.int-stats-banner .stat-value.qual { color: #60a5fa; }
+.int-stats-banner .stat-value.sync { color: #fbbf24; }
+
+.hub-diagram {
+  position: relative;
+  width: 100%;
+  max-width: 720px;
+  height: 720px;
+  margin: 0 auto 36px;
+}
+@media (max-width: 800px) { .hub-diagram { height: 520px; max-width: 520px; } }
+
+.hub-center {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 170px; height: 170px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #f25c19, #ff8a50);
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  color: var(--white);
+  box-shadow: 0 0 0 0 rgba(242,92,25,.4), 0 8px 32px rgba(242,92,25,.25);
+  animation: hubPulse 2.5s ease-in-out infinite;
+  z-index: 10;
+  text-align: center;
+}
+.hub-center .hub-label { font-weight: 800; font-size: 1rem; line-height: 1.2; }
+.hub-center .hub-sub { font-size: .7rem; opacity: .85; margin-top: 4px; }
+@keyframes hubPulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(242,92,25,.35), 0 8px 32px rgba(242,92,25,.25); }
+  50% { box-shadow: 0 0 0 18px rgba(242,92,25,0), 0 8px 32px rgba(242,92,25,.3); }
+}
+
+.spoke-node {
+  position: absolute;
+  width: 110px; height: 110px;
+  border-radius: 16px;
+  background: var(--white);
+  border: 2px solid var(--g200);
+  box-shadow: var(--shadow-md);
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  text-align: center;
+  padding: 8px;
+  z-index: 10;
+  transition: transform .2s, box-shadow .2s;
+}
+.spoke-node:hover { transform: scale(1.06); box-shadow: var(--shadow-lg); }
+.spoke-node .sys-icon { font-size: 1.6rem; margin-bottom: 4px; }
+.spoke-node .sys-name { font-size: .7rem; font-weight: 700; color: var(--g800); line-height: 1.2; }
+.spoke-node .sys-type { font-size: .6rem; color: var(--g500); margin-top: 2px; }
+.spoke-node .sys-status {
+  width: 8px; height: 8px; border-radius: 50%;
+  position: absolute; top: 8px; right: 8px;
+}
+.spoke-node .sys-status.connected { background: #16a34a; box-shadow: 0 0 6px rgba(22,163,74,.5); }
+.spoke-node .sys-status.syncing { background: #d97706; animation: statusBlink 1.4s ease-in-out infinite; }
+@keyframes statusBlink { 0%, 100% { opacity: 1; } 50% { opacity: .4; } }
+
+.hub-lines {
+  position: absolute; top: 0; left: 0;
+  width: 100%; height: 100%;
+  z-index: 1;
+}
+
+.sys-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-bottom: 28px;
+}
+@media (max-width: 900px) { .sys-cards-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 600px) { .sys-cards-grid { grid-template-columns: 1fr; } }
+
+.sys-card {
+  background: var(--white);
+  border: 1px solid var(--g200);
+  border-radius: var(--radius);
+  padding: 18px 20px;
+  box-shadow: var(--shadow);
+  transition: box-shadow .15s;
+}
+.sys-card:hover { box-shadow: var(--shadow-md); }
+.sys-card-header { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+.sys-card-icon {
+  width: 40px; height: 40px; border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.2rem; flex-shrink: 0;
+}
+.sys-card-icon.erp { background: #eff6ff; }
+.sys-card-icon.crm { background: #fef3c7; }
+.sys-card-icon.portal { background: #f3e8ff; }
+.sys-card-icon.marketing { background: #fce7f3; }
+.sys-card-title { font-weight: 700; font-size: .92rem; color: var(--g800); }
+.sys-card-type { font-size: .72rem; color: var(--g500); }
+.sys-card-status-badge {
+  margin-left: auto;
+  font-size: .68rem; font-weight: 700; padding: 3px 9px;
+  border-radius: 10px; text-transform: uppercase; letter-spacing: .3px;
+}
+.sys-card-status-badge.connected { background: var(--green-bg); color: var(--green-h); }
+.sys-card-status-badge.syncing { background: var(--amber-bg); color: var(--amber); }
+
+.sys-card-metrics { display: flex; flex-direction: column; gap: 10px; }
+.sys-metric-row { display: flex; justify-content: space-between; align-items: center; }
+.sys-metric-label { font-size: .78rem; color: var(--g500); }
+.sys-metric-value { font-size: .82rem; font-weight: 600; color: var(--g800); }
+
+.sys-quality-bar { width: 100%; height: 6px; background: var(--g100); border-radius: 3px; overflow: hidden; margin-top: 2px; }
+.sys-quality-fill { height: 100%; border-radius: 3px; transition: width .6s ease; }
+
+.sys-card-footer { margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--g100); display: flex; justify-content: space-between; align-items: center; }
+.sys-card-sync { font-size: .72rem; color: var(--g400); }
+.sys-card-sync .sync-dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; margin-right: 5px; vertical-align: middle; }
+.sys-card-sync .sync-dot.green { background: var(--green); }
+.sys-card-sync .sync-dot.amber { background: var(--amber); }
+
+.int-narrative {
+  background: linear-gradient(135deg, #fff7ed, #fff5ef);
+  border: 1px solid #fed7aa;
+  border-left: 4px solid #f25c19;
+  border-radius: var(--radius);
+  padding: 22px 26px;
+  margin-bottom: 28px;
+}
+.int-narrative h3 {
+  font-size: .82rem; font-weight: 700; color: #c2410c;
+  text-transform: uppercase; letter-spacing: .5px; margin-bottom: 10px;
+  display: flex; align-items: center; gap: 8px;
+}
+.int-narrative p { font-size: .9rem; color: var(--g700); line-height: 1.65; }
+.int-narrative strong { color: var(--g800); }
+
+.partner-strip {
+  background: var(--white);
+  border: 1px solid var(--g200);
+  border-radius: var(--radius);
+  padding: 16px 22px;
+  display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+  box-shadow: var(--shadow);
+}
+.partner-strip .partner-badge {
+  background: #a100ff; color: var(--white);
+  font-weight: 800; font-size: .78rem;
+  padding: 5px 12px; border-radius: var(--radius-sm);
+  letter-spacing: .3px;
+}
+.partner-strip .partner-text { font-size: .88rem; color: var(--g600); flex: 1; }
+.partner-strip .partner-text strong { color: var(--g800); }
+
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo"><span class="logo-name">KUKA</span></div>
+  <div class="header-text">
+    <h1>Lead Generation Agent</h1>
+    <p>Industrial automation prospecting</p>
+  </div>
+  <div class="header-nav">
+    <button class="header-nav-tab active" data-screen="lead-gen">Lead Generation</button>
+    <button class="header-nav-tab" data-screen="integration">Integration Layer</button>
+  </div>
+  <div class="header-spacer"></div>
+  <div class="header-back" id="headerBack" style="display:none">&larr; Back to pipeline</div>
+</header>
+
+<div class="container">
+
+  <!-- ─────────────────── Screen 0: Inputs ─────────────────── -->
+  <section id="screenInput" class="screen active">
+    <h2 class="input-title">Run the Lead-Gen Agent</h2>
+    <p class="input-subtitle">The agent reads public data on prospect manufacturers, anchors them against KUKA's existing customer book, and writes a prioritised list plus per-prospect cold-call cheat sheets.</p>
+
+    <div class="input-grid">
+      <div class="input-card">
+        <div class="icon ic-orange">F</div>
+        <div class="body">
+          <h3>Public financials</h3>
+          <p>Creditreform / Bundesanzeiger extracts &mdash; revenue, EBIT, headcount trends, ownership, sector code</p>
+          <div class="meta">10 prospects loaded</div>
+        </div>
+      </div>
+      <div class="input-card">
+        <div class="icon ic-purple">L</div>
+        <div class="body">
+          <h3>LinkedIn stakeholders</h3>
+          <p>LinkedIn Sales Navigator enrichment &mdash; named employees with title and seniority</p>
+          <div class="meta">38 stakeholder profiles</div>
+        </div>
+      </div>
+      <div class="input-card">
+        <div class="icon ic-green">W</div>
+        <div class="body">
+          <h3>Website &amp; media snapshots</h3>
+          <p>Company websites, press releases, hiring announcements, leadership changes</p>
+          <div class="meta">10 snapshots loaded</div>
+        </div>
+      </div>
+      <div class="input-card">
+        <div class="icon ic-amber">H</div>
+        <div class="body">
+          <h3>Contact details</h3>
+          <p>Creditreform &amp; company contact pages &mdash; phone, email, postal address</p>
+          <div class="meta">10 contact files</div>
+        </div>
+      </div>
+      <div class="input-card">
+        <div class="icon ic-navy">K</div>
+        <div class="body">
+          <h3>KUKA customer anchors</h3>
+          <p>6 existing customer profiles for look-alike modelling: Schneider Pr&auml;zisionsteile, Novara Technologies, Hartmann Metallbau, Bayer Pharma-Pack, and more</p>
+          <div class="meta">6 customer anchors</div>
+        </div>
+      </div>
+      <div class="input-card">
+        <div class="icon ic-red">R</div>
+        <div class="body">
+          <h3>ICP &amp; scoring rubric</h3>
+          <p>7-factor weighted rubric (financial, headcount, industry, look-alike, stakeholder, contact, triggers)</p>
+          <div class="meta">Published rubric</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="run-row">
+      <button id="runBtn" class="btn btn-primary">Run lead-gen agent &rarr;</button>
+    </div>
+  </section>
+
+  <!-- ─────────────────── Screen 1: Pipeline ─────────────────── -->
+  <section id="screenPipeline" class="screen">
+    <div class="summary-banner">
+      <div class="summary-left">
+        <h2>Prospect pipeline &mdash; 10 manufacturers analysed</h2>
+        <p>Run completed in 1.8 seconds &middot; rubric: <code>icp-and-scoring-rubric.md</code></p>
+      </div>
+      <div class="summary-stats">
+        <div class="stat"><div class="stat-value high" id="statHigh">7</div><div class="stat-label">High priority</div></div>
+        <div class="stat"><div class="stat-value med" id="statMed">2</div><div class="stat-label">Medium</div></div>
+        <div class="stat"><div class="stat-value low" id="statLow">1</div><div class="stat-label">Low</div></div>
+        <div class="stat"><div class="stat-value" id="statPremium">~&euro;2.9M</div><div class="stat-label">Est. deal pipeline</div></div>
+      </div>
+    </div>
+
+    <div class="pipeline-panel">
+
+      <div class="top-action">
+        <div class="pulse"></div>
+        <div class="copy"><strong>Top 2 to call this week:</strong> Bavaria Motors GmbH (Dr. Martin Kurz, VP Production &mdash; just joined from ZF with BMW contract requiring new production line) and S&uuml;ddeutsche Elektronik Montage GmbH (Yuki Tanaka, VP Operations &mdash; ex-Foxconn with explicit automation mandate and &euro;5M Industry 4.0 budget).</div>
+      </div>
+
+      <div class="pipeline-toolbar">
+        <span class="toolbar-label">Filter</span>
+        <select id="filterPriority" class="filter-select">
+          <option value="all">All priorities</option>
+          <option value="High">High only</option>
+          <option value="Medium">Medium only</option>
+          <option value="Low">Low only</option>
+        </select>
+        <select id="filterSize" class="filter-select">
+          <option value="all">All sizes</option>
+          <option value="small">Small (20-79 FTE)</option>
+          <option value="mid">Mid (80-250 FTE)</option>
+          <option value="large">Large (250+ FTE)</option>
+        </select>
+        <select id="filterIndustry" class="filter-select">
+          <option value="all">All industries</option>
+        </select>
+        <div class="toolbar-spacer"></div>
+        <span id="filterCount" style="font-size:.82rem;color:var(--g500)"></span>
+      </div>
+
+      <table class="prospect-table" id="pipelineTable">
+        <thead>
+          <tr>
+            <th data-sort="rank" class="sorted asc">#</th>
+            <th data-sort="company">Company</th>
+            <th data-sort="industry">Industry</th>
+            <th data-sort="headcount">HC</th>
+            <th data-sort="score">Score</th>
+            <th data-sort="priority">Priority</th>
+            <th data-sort="anchor">Closest anchor</th>
+            <th data-sort="stakeholder">Recommended stakeholder</th>
+            <th data-sort="deal">Est. deal value</th>
+          </tr>
+        </thead>
+        <tbody id="pipelineBody"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ─────────────────── Screen 2: Detail ─────────────────── -->
+  <section id="screenDetail" class="screen">
+    <div class="detail-header" id="detailHeader"></div>
+    <div class="tab-bar">
+      <div class="tab active" data-tab="scoring">Scoring rationale</div>
+      <div class="tab" data-tab="stakeholder">Stakeholder dossier</div>
+      <div class="tab" data-tab="cheat">Cold-call cheat sheet</div>
+    </div>
+    <div id="tab-scoring" class="tab-content active"></div>
+    <div id="tab-stakeholder" class="tab-content"></div>
+    <div id="tab-cheat" class="tab-content"></div>
+  </section>
+
+  <!-- ─────────────────── Screen 3: Integration Layer ─────────────────── -->
+  <section id="screenIntegration" class="screen">
+    <h2 class="int-title">CRM &amp; ERP Integration Layer</h2>
+    <p class="int-subtitle">Unified data orchestration across KUKA's 9 source systems &mdash; normalising accounts, contacts, and opportunities from heterogeneous CRM and ERP platforms into a single customer view for the Lead-Gen Agent.</p>
+
+    <div class="int-stats-banner">
+      <div class="summary-left">
+        <h2 style="font-size:1.15rem;">System Connectivity</h2>
+        <p style="font-size:.85rem;color:var(--g300);margin-top:2px;">Real-time sync across all connected platforms</p>
+      </div>
+      <div class="summary-stats" style="display:flex;gap:24px;flex-wrap:wrap;">
+        <div class="stat"><div class="stat-value conn">9</div><div class="stat-label">Systems Connected</div></div>
+        <div class="stat"><div class="stat-value qual">1.2M</div><div class="stat-label">Total Entities</div></div>
+        <div class="stat"><div class="stat-value" style="color:#fff">83%</div><div class="stat-label">Avg. Data Quality</div></div>
+        <div class="stat"><div class="stat-value sync" id="lastSyncGlobal">4 min ago</div><div class="stat-label">Last Full Sync</div></div>
+      </div>
+    </div>
+
+    <div class="hub-diagram" id="hubDiagram">
+      <svg class="hub-lines" id="hubLines"></svg>
+      <div class="hub-center">
+        <div class="hub-label">KUKA<br>Orchestration<br>Layer</div>
+        <div class="hub-sub">Unified API</div>
+      </div>
+    </div>
+
+    <div class="int-narrative">
+      <h3>&#9888;&#65039; The Data Challenge</h3>
+      <p>KUKA operates across <strong>9 CRM and ERP systems</strong> spanning multiple business units, geographies, and entity models. Different ERPs serve different legal entities. Customer master data is fragmented, duplicated, and inconsistent &mdash; <strong>data quality is the critical bottleneck</strong> for any AI-driven lead scoring or account intelligence.</p>
+      <p style="margin-top:10px;">The <strong>Orchestration Layer</strong> solves this by normalising entity data from SAP, Salesforce, Dynamics, Oracle, and legacy systems into a <strong>single unified customer view</strong>. The Lead-Gen Agent reads from this layer &mdash; not from 9 individual systems. This is what makes automated prospect-to-customer matching possible at scale.</p>
+    </div>
+
+    <div class="sys-cards-grid" id="sysCardsGrid"></div>
+
+    <div class="partner-strip">
+      <div class="partner-badge">ACCENTURE</div>
+      <div class="partner-text"><strong>Implementation partner:</strong> The Orchestration Layer is designed and built jointly with Accenture's Data &amp; AI practice, leveraging their cross-industry experience in CRM consolidation, MDM, and enterprise integration architecture.</div>
+    </div>
+  </section>
+
+</div>
+
+<!-- Processing overlay -->
+<div class="overlay" id="overlay">
+  <div class="proc-card">
+    <div class="proc-title">Lead-gen agent running...</div>
+    <div class="step" id="s1"><div class="step-icon"><div class="step-circle"></div></div><div class="step-text">Reading 10 prospect data packets</div></div>
+    <div class="step" id="s2"><div class="step-icon"><div class="step-circle"></div></div><div class="step-text">Loading 6 customer anchor profiles</div></div>
+    <div class="step" id="s3"><div class="step-icon"><div class="step-circle"></div></div><div class="step-text">Scoring prospects on 7-factor rubric</div></div>
+    <div class="step" id="s4"><div class="step-icon"><div class="step-circle"></div></div><div class="step-text">Identifying decision-maker per prospect</div></div>
+    <div class="step" id="s5"><div class="step-icon"><div class="step-circle"></div></div><div class="step-text">Drafting per-prospect cheat sheets</div></div>
+  </div>
+</div>
+
+<script>
+// ───────────────────────────────────────────────────────────
+// Data: prospect scorecards
+// ───────────────────────────────────────────────────────────
+const PROSPECTS = [
+  {
+    id: "01-bavaria-motors",
+    company: "Bavaria Motors GmbH",
+    industry: "Automotive Tier 1 (powertrain)",
+    region: "Bavaria (Ingolstadt)",
+    headcount: 220, sizeBand: "mid",
+    revenue_meur: 78, ebit_margin_pct: 7.2,
+    growth: "Growing", ownership: "Family-owned (2nd generation)",
+    score: 94, priority: "High",
+    factors: {
+      financial_fit: { score: 5, just: "Revenue \u20AC78M in band, 3-yr CAGR ~12% (62\u219270\u219278), EBIT 7.2% \u2014 meets all top-band criteria." },
+      headcount_fit: { score: 5, just: "220 FTE in 80-250 growing band (195\u2192210\u2192220) \u2014 sweet spot." },
+      industry: { score: 5, just: "Automotive Tier 1 \u2014 highest automation-intensity per rubric." },
+      look_alike: { score: 5, anchor: "Schneider Pr\u00e4zisionsteile GmbH", sim: 85, just: "Same industry (automotive supplier), same size band, same ownership (family-owned), same region (Bavaria).", attrs: ["Same industry", "Same size band", "Family-owned", "Same region (Bavaria)"] },
+      stakeholder: { score: 5, just: "VP Production Dr. Martin Kurz (joined Jan 2026 from ZF), CEO Hans-Peter Weidmann, CFO Claudia Berger \u2014 all named with direct contacts." },
+      contact: { score: 5, just: "Phone, email, address all present at company and individual level." },
+      triggers: { score: 5, just: "BMW i-series component contract Feb 2026 requiring new production line, \u2018Zukunft der Fertigung\u2019 modernisation programme Mar 2026, VP Production joined Jan 2026 from ZF Friedrichshafen." }
+    },
+    stakeholder: {
+      name: "Dr. Martin Kurz", title: "VP Production",
+      email: "m.kurz@bavaria-motors.de", phone: "+49 841 555 1202",
+      rule: "HC \u2265 80 AND VP Production title present \u2192 Production leader is primary contact.",
+      alternates: [
+        { name: "Hans-Peter Weidmann", title: "CEO / Owner", reason: "Family owner; final capex decision-maker." },
+        { name: "Claudia Berger", title: "CFO", reason: "Owns investment budget; relevant for ROI/leasing discussion." }
+      ]
+    },
+    deal_keur: 430,
+    triggers: [
+      "BMW i-series component contract won (Feb 2026) \u2014 requires new production line",
+      "\u2018Zukunft der Fertigung\u2019 24-month modernisation programme announced (Mar 2026)",
+      "VP Production Dr. Martin Kurz joined from ZF Friedrichshafen (Jan 2026)",
+      "Can\u2019t find skilled welders \u2014 5 open positions unfilled for 4+ months"
+    ],
+    cheat: {
+      best_time: "Tuesday or Wednesday morning, 09:00",
+      opening: "Dr. Kurz, I saw the Zukunft der Fertigung announcement \u2014 congratulations on the BMW i-series contract. We work with Schneider Pr\u00e4zisionsteile in Stuttgart \u2014 same industry, same family-owned DNA \u2014 and they run 12 KUKA robots across their welding and machine-loading lines. Their technicians program the cells themselves after KUKA College training. Worth 30 minutes to compare notes on your modernisation roadmap?",
+      pains: [
+        "BMW contract requires a new welding line that doesn\u2019t exist yet \u2014 build-vs-buy decision imminent",
+        "5 skilled welder positions unfilled for 4+ months \u2014 labour shortage is the burning platform",
+        "Existing 5 ABB robots are 8+ years old \u2014 maintenance costs rising, controller generation outdated",
+        "\u2018Zukunft der Fertigung\u2019 has a 24-month clock \u2014 Dr. Kurz needs to show results to the family by H2 2027"
+      ],
+      pillars: [
+        { p: "Robot systems & integration", t: "KR CYBERTECH arc welding cells for the BMW line + KR QUANTEC for machine loading. iiQKA.OS makes programming intuitive \u2014 your technicians own it after KUKA College training." },
+        { p: "Software & digital services", t: "KUKA.Sim for offline programming (validate cycle times before building the cell) + smartPRODUCTION for real-time OEE dashboards." },
+        { p: "Service, maintenance & training", t: "KUKA Care Smart service contract + KUKA College certification for your internal maintenance team. Self-sufficiency in 6 months." }
+      ],
+      proof: [
+        "Schneider Pr\u00e4zisionsteile GmbH \u2014 Stefan Richter at KUKA is their account manager. 150 FTE, 12 KUKA robots, family-owned 2nd-generation automotive Tier 2 in Stuttgart. Technicians self-sufficient after KUKA College. Broke even on first cell in 14 months."
+      ],
+      qa: [
+        { q: "We already have ABB robots \u2014 why switch?", a: "Mixed fleets are common \u2014 you don\u2019t have to switch, you can add. But KUKA\u2019s iiQKA.OS is a generation ahead in ease of use vs. ABB\u2019s RAPID. Your technicians will program KUKA cells 40% faster. Happy to do a side-by-side demo." },
+        { q: "The family is cautious about big capex.", a: "KUKA Financial Services offers leasing \u2014 \u20AC200K cell becomes ~\u20AC4.5K/month. And Schneider\u2019s ROI case is documented: first cell paid for itself in 14 months at typical 2-shift utilisation." },
+        { q: "Our people don\u2019t know robotics.", a: "That\u2019s exactly why KUKA College exists. Schneider\u2019s maintenance team started with zero robotics experience. 4-day course, and they program cells themselves. We can show you their training path." }
+      ],
+      cta: "Can I arrange a factory visit at Schneider Pr\u00e4zisionsteile for you and Hans-Peter? Plus a free process assessment of your BMW line requirements."
+    }
+  },
+  {
+    id: "08-sueddeutsche-elektronik",
+    company: "S\u00fcddeutsche Elektronik Montage GmbH",
+    industry: "Electronics (EMS / PCB assembly)",
+    region: "Bavaria (Regensburg)",
+    headcount: 130, sizeBand: "mid",
+    revenue_meur: 38, ebit_margin_pct: 5.8,
+    growth: "Growing (PE-backed transformation)", ownership: "PE-backed (Mittelstand Capital Partners)",
+    score: 91, priority: "High",
+    factors: {
+      financial_fit: { score: 4, just: "Revenue \u20AC38M in band, growing (26\u219232\u219238), EBIT 5.8% positive. PE backing signals investment appetite." },
+      headcount_fit: { score: 5, just: "130 FTE in 80-250 growing band (105\u2192118\u2192130) \u2014 sweet spot." },
+      industry: { score: 5, just: "Electronics assembly \u2014 high-precision, ESD-sensitive, top of rubric." },
+      look_alike: { score: 5, anchor: "Novara Technologies GmbH", sim: 92, just: "Same industry (electronics manufacturing), same size band, same PE-backed ownership, same growth profile.", attrs: ["Same industry", "Same size band", "PE-backed", "Same growth profile"] },
+      stakeholder: { score: 5, just: "VP Operations Yuki Tanaka (ex-Foxconn, joined Dec 2025), CEO Dr. Franziska Lehmann, CTO Rainer St\u00f6hr, CFO Christine Bauer \u2014 all named." },
+      contact: { score: 5, just: "Phone, email, address present at company and individual level." },
+      triggers: { score: 5, just: "VP Ops joined Dec 2025 from Foxconn with automation mandate, \u20AC5M Industry 4.0 investment programme announced Mar 2026, Bosch automotive-ECU contract Jan 2026 requiring <0.3% defect rate." }
+    },
+    stakeholder: {
+      name: "Yuki Tanaka", title: "VP Operations",
+      email: "y.tanaka@sem-regensburg.de", phone: "+49 941 789 2205",
+      rule: "HC \u2265 80 AND VP Operations present \u2192 Ops leader is primary. Reinforced by explicit automation mandate from PE owner.",
+      alternates: [
+        { name: "Dr. Franziska Lehmann", title: "CEO", reason: "PE-appointed; final approval for \u20AC5M investment programme." },
+        { name: "Rainer St\u00f6hr", title: "CTO / Co-founder", reason: "Retained co-founder; technical authority and potential internal champion or blocker." }
+      ]
+    },
+    deal_keur: 400,
+    triggers: [
+      "VP Operations Yuki Tanaka joined from Foxconn (Dec 2025) \u2014 explicit automation mandate",
+      "\u20AC5M Industry 4.0 investment programme announced (Mar 2026)",
+      "Bosch automotive-ECU contract won (Jan 2026) \u2014 requires <0.3% defect rate",
+      "PE owner demanding 60% EBITDA improvement in 3 years"
+    ],
+    cheat: {
+      best_time: "Tuesday or Wednesday morning, 09:30",
+      opening: "Yuki, congratulations on the VP Operations role. I read about the \u20AC5M Industry 4.0 investment programme \u2014 that\u2019s exactly the kind of transformation we supported at Novara Technologies in M\u00fcnchen. Same industry, same PE-backed structure, same quality challenge. Dr. Fischer\u2019s team went from 1.8% to 0.4% defects with 10 KUKA robots. Worth 30 minutes to compare approaches?",
+      pains: [
+        "PE demanding 60% EBITDA improvement in 3 years \u2014 automation is explicitly the lever",
+        "Quality rejects at 2.1% vs PE target <0.5% and Bosch contract demanding <0.3%",
+        "Manual THT assembly and testing is the bottleneck \u2014 quality depends on operator skill",
+        "\u20AC5M budget needs to deliver measurable ROI for the PE board within 18 months"
+      ],
+      pillars: [
+        { p: "Robot systems & integration", t: "KR AGILUS ESD-protected robots for PCB handling + automated testing. KR SCARA for THT insertion. ESD-safe from the factory \u2014 no retrofit needed." },
+        { p: "Software & digital services", t: "smartPRODUCTION for real-time quality monitoring and SPC dashboards \u2014 the PE board gets the data they need." },
+        { p: "Service, maintenance & training", t: "KUKA Care Smart service contract + IPC Class 3 process certification support." }
+      ],
+      proof: [
+        "Novara Technologies GmbH \u2014 Stefan Richter at KUKA is their account manager. 180 FTE electronics manufacturer in M\u00fcnchen, PE-backed. 10 KUKA robots (KR AGILUS + KR SCARA). Defect reduction from 1.8% to 0.4%. Maja Johansson (VP Operations) happy to do a peer reference call."
+      ],
+      qa: [
+        { q: "We need to see ROI before the next PE board.", a: "Novara\u2019s ROI case is documented \u2014 happy to share the anonymised version. Their first cell showed positive ROI in 11 months. We can model yours with KUKA.Sim before you commit." },
+        { q: "Our CTO Rainer is attached to our current processes.", a: "Involve Rainer in the KUKA.Sim simulation \u2014 he\u2019ll see his own processes improved, not replaced. CTO buy-in is critical and we\u2019ve navigated this with co-founders at other PE-backed companies." },
+        { q: "We have Siemens/ASM SMT lines \u2014 will KUKA integrate?", a: "Yes \u2014 KUKA integrates with all major SMT and test equipment. Novara runs a similar Siemens setup. Our KR C5 controller speaks every industrial protocol." }
+      ],
+      cta: "Can I send you the Novara case study (anonymised) and grab 30 minutes? Happy to include Dr. Lehmann and Rainer in the call."
+    }
+  },
+  {
+    id: "04-precision-aero",
+    company: "PrecisionAero Components GmbH",
+    industry: "Aerospace (structural parts)",
+    region: "Hamburg",
+    headcount: 175, sizeBand: "mid",
+    revenue_meur: 68, ebit_margin_pct: 8.5,
+    growth: "Growing", ownership: "PE-backed (Nordstern Capital)",
+    score: 88, priority: "High",
+    factors: {
+      financial_fit: { score: 5, just: "Revenue \u20AC68M in band, 3-yr CAGR ~13% (53\u219260\u219268), EBIT 8.5% \u2014 meets all top-band criteria." },
+      headcount_fit: { score: 5, just: "175 FTE in 80-250 growing band (150\u2192165\u2192175) \u2014 sweet spot." },
+      industry: { score: 5, just: "Aerospace component manufacturing \u2014 high-precision, regulated, top of rubric." },
+      look_alike: { score: 4, anchor: "Hartmann Metallbau AG", sim: 78, just: "Adjacent industry (both heavy metal processing + CNC), same size band, same PE-backed (vs family) ownership. Different region (Hamburg vs Bavaria).", attrs: ["Adjacent industry", "Same size band", "Similar CNC operations", "Growing"] },
+      stakeholder: { score: 5, just: "COO/Plant Manager Katrin Vogt, CEO Dr. Michael Brandt (ex-Airbus), CFO Lars Henriksen, Head of CNC Ops Thomas Richter \u2014 all named with contacts." },
+      contact: { score: 5, just: "Phone, email, address all present at company and individual level." },
+      triggers: { score: 5, just: "Airbus A350 wing-rib subcontract won Dec 2025 (\u20AC15M/3yr), new 5-axis CNC hall being built for Q3 2026, CEO blog post Jan 2026: \u2018Our Industry 4.0 roadmap\u2019." }
+    },
+    stakeholder: {
+      name: "Katrin Vogt", title: "COO / Plant Manager",
+      email: "k.vogt@precisionaero.de", phone: "+49 40 678 4402",
+      rule: "HC \u2265 80 AND COO/Plant Manager present \u2192 Plant Manager is primary contact for automation decisions.",
+      alternates: [
+        { name: "Dr. Michael Brandt", title: "CEO", reason: "Ex-Airbus; strategic sponsor and Industry 4.0 champion." },
+        { name: "Thomas Richter", title: "Head of CNC Operations", reason: "Runs the shop floor daily; technical champion for machine-loading automation." }
+      ]
+    },
+    deal_keur: 350,
+    triggers: [
+      "Airbus A350 wing-rib subcontract won (Dec 2025) \u2014 \u20AC15M over 3 years, largest in company history",
+      "New 5-axis CNC hall being built, operational Q3 2026 \u2014 greenfield robot integration opportunity",
+      "CEO blog post (Jan 2026): \u2018Our Industry 4.0 roadmap: from craft to smart factory\u2019",
+      "PE owner Nordstern Capital pushing for EBITDA improvement through automation"
+    ],
+    cheat: {
+      best_time: "Wednesday or Thursday morning, 09:00",
+      opening: "Katrin, congratulations on the Airbus A350 subcontract \u2014 that\u2019s a transformative win. I read Dr. Brandt\u2019s blog post on the Industry 4.0 roadmap and the new CNC hall you\u2019re building for Q3. We work with Hartmann Metallbau in N\u00fcrnberg \u2014 same CNC-heavy setup, 15 KUKA robots, they host factory tours for us. Friedrich Hartmann broke even on his first cell in 14 months. Worth 30 minutes to discuss the new hall?",
+      pains: [
+        "New CNC hall needs automated machine loading from day one \u2014 building it manual would be a missed opportunity",
+        "Airbus demands cycle-time consistency and traceability that manual loading can\u2019t guarantee",
+        "PE owner Nordstern pushing for EBITDA improvement \u2014 automation ROI case needs to be PE-grade",
+        "Skilled CNC operators are scarce \u2014 machine loading is below their skill level but consumes their time"
+      ],
+      pillars: [
+        { p: "Robot systems & integration", t: "KR QUANTEC/FORTEC for CNC machine loading and part handling in the new hall. Payload matches your structural parts (120-300kg class)." },
+        { p: "Software & digital services", t: "KUKA.Sim for offline programming (critical for aerospace changeovers \u2014 validate before you run) + smartPRODUCTION for traceability and AS9100D documentation." },
+        { p: "Service, maintenance & training", t: "KUKA Care Smart for AS9100D-compatible maintenance documentation + KUKA College for your CNC team." }
+      ],
+      proof: [
+        "Hartmann Metallbau AG \u2014 Lisa Neumann at KUKA is their account manager. 200 FTE, 15 KUKA robots, same CNC-heavy setup. Lighthouse customer who hosts factory tours for KUKA prospects. Friedrich Hartmann broke even on first cell in 14 months."
+      ],
+      qa: [
+        { q: "Aerospace compliance makes change slow.", a: "KUKA has AS9100D-compatible documentation and process validation packages. Our KUKA.Sim simulation lets you validate before you build \u2014 exactly what your quality team needs for the Airbus PPAP." },
+        { q: "The PE owner wants fast payback.", a: "Hartmann\u2019s documented case: first cell broke even in 14 months at 2-shift utilisation. We can model your specific A350 line with KUKA.Sim before you commit." },
+        { q: "We need custom end-effectors for aerospace parts.", a: "KUKA System Partners specialise in custom grippers and fixtures for aerospace. We connect you with the right partner for your part geometry." }
+      ],
+      cta: "Can I arrange a factory tour at Hartmann Metallbau for you and Thomas? Plus a free ROI simulation with KUKA.Sim for the new CNC hall."
+    }
+  },
+  {
+    id: "02-rhein-pharma",
+    company: "RheinPharma Produktions GmbH",
+    industry: "Pharmaceutical manufacturing",
+    region: "NRW (Leverkusen)",
+    headcount: 145, sizeBand: "mid",
+    revenue_meur: 52, ebit_margin_pct: 9.1,
+    growth: "Growing", ownership: "Founder-led",
+    score: 84, priority: "High",
+    factors: {
+      financial_fit: { score: 5, just: "Revenue \u20AC52M in band, 3-yr CAGR ~15% (39\u219246\u219252), EBIT 9.1% \u2014 meets all top-band criteria." },
+      headcount_fit: { score: 4, just: "145 FTE in 80-250 band, growing (120\u2192135\u2192145). Just below the 150 mark." },
+      industry: { score: 5, just: "Pharmaceutical manufacturing \u2014 high-precision, regulated, cleanroom, top of rubric." },
+      look_alike: { score: 5, anchor: "Bayer Pharma-Pack GmbH", sim: 90, just: "Same industry (pharmaceutical packaging/manufacturing), same size band, same region (NRW), same cleanroom requirements.", attrs: ["Same industry", "Same region (NRW)", "Same cleanroom requirements", "Same size band"] },
+      stakeholder: { score: 5, just: "Head of Production Markus Fischer (11-year tenure), CEO Dr. Anna Reinhardt, VP Quality Prof. Dr. J\u00f6rg Kellner \u2014 all named." },
+      contact: { score: 5, just: "Phone, email, address all present at company and individual level." },
+      triggers: { score: 4, just: "Serialisation compliance deadline Q4 2026 requiring automated track-and-trace, new cleanroom wing opened Nov 2025, 3 CDMO contracts signed Jan 2026." }
+    },
+    stakeholder: {
+      name: "Markus Fischer", title: "Head of Production",
+      email: "m.fischer@rheinpharma.de", phone: "+49 214 876 1103",
+      rule: "HC \u2265 80 AND Head of Production present \u2192 Production head is primary contact.",
+      alternates: [
+        { name: "Dr. Anna Reinhardt", title: "CEO / Founder", reason: "Founder; final investment decision-maker." },
+        { name: "Prof. Dr. J\u00f6rg Kellner", title: "VP Quality & Compliance", reason: "Gate for any GMP-impacting change; must be satisfied on validation." }
+      ]
+    },
+    deal_keur: 310,
+    triggers: [
+      "Serialisation compliance deadline Q4 2026 \u2014 automated track-and-trace required",
+      "New cleanroom wing opened (Nov 2025) \u2014 needs automated handling",
+      "3 new CDMO contracts signed (Jan 2026) \u2014 scaling contract manufacturing",
+      "IFS / GMP audit cycle driving process automation requirements"
+    ],
+    cheat: {
+      best_time: "Tuesday or Wednesday morning, 09:30",
+      opening: "Markus, I understand you\u2019re preparing for the serialisation deadline in Q4. We work with Bayer Pharma-Pack in D\u00fcsseldorf \u2014 same industry, same NRW region, same cleanroom requirements. Dr. Bayer\u2019s team uses KR AGILUS cleanroom robots for blister packaging and track-and-trace. Worth 30 minutes to see if the setup translates to your new wing?",
+      pains: [
+        "Serialisation compliance deadline Q4 2026 \u2014 manual processes won\u2019t meet track-and-trace requirements",
+        "New cleanroom wing needs automated handling \u2014 building it manual would waste the investment",
+        "CDMO growth means more product changeovers \u2014 flexibility and validated processes are critical",
+        "Manual packaging is the bottleneck preventing scale-up to serve the 3 new biotech clients"
+      ],
+      pillars: [
+        { p: "Robot systems & integration", t: "KR AGILUS cleanroom-rated robots for blister packaging, palletising, and automated serialisation. LBR iisy cobots for quality inspection stations." },
+        { p: "Software & digital services", t: "KUKA.Sim for GMP-compliant process validation \u2014 validate before you qualify. Digital documentation for IQ/OQ/PQ." },
+        { p: "Service, maintenance & training", t: "KUKA Care Premium \u2014 GMP compliance documentation included. Calibration and PM schedules aligned with your validation calendar." }
+      ],
+      proof: [
+        "Bayer Pharma-Pack GmbH \u2014 Stefan Richter at KUKA is their account manager. 85 FTE pharma packaging company in D\u00fcsseldorf, same NRW region. 6 KUKA robots (KR AGILUS cleanroom + LBR iisy). GMP-compliant, cleanroom-rated."
+      ],
+      qa: [
+        { q: "We need to validate with EMA first.", a: "KUKA provides complete IQ/OQ/PQ documentation packages. Bayer Pharma-Pack went through the same validation cycle \u2014 we can share the timeline and approach." },
+        { q: "Cleanroom robots are expensive.", a: "Compare the cost to a single contamination event or a failed batch. One KR AGILUS cleanroom robot costs less than the average batch reject in pharma packaging." },
+        { q: "We don\u2019t have robotics engineers.", a: "LBR iisy is designed for non-experts \u2014 hand-guiding programming. Markus, your operators will program it in 2 days of KUKA College training." }
+      ],
+      cta: "Can I arrange a cleanroom demo at KUKA\u2019s Augsburg facility and connect you with Dr. Bayer for a peer reference call?"
+    }
+  },
+  {
+    id: "07-norddeutsche-schweiss",
+    company: "Norddeutsche Schwei\u00dftechnik GmbH",
+    industry: "Metal fabrication (welding / steel construction)",
+    region: "Bremen",
+    headcount: 78, sizeBand: "small",
+    revenue_meur: 24, ebit_margin_pct: 5.1,
+    growth: "Stable", ownership: "Family-owned (founder retiring)",
+    score: 79, priority: "High",
+    factors: {
+      financial_fit: { score: 3, just: "Revenue \u20AC24M in band, stable (22\u219223\u219224), EBIT 5.1% \u2014 marginally positive for metal fabrication." },
+      headcount_fit: { score: 4, just: "78 FTE in 50-79 stable band \u2014 solid mid-range." },
+      industry: { score: 4, just: "Metal fabrication/welding \u2014 core robot application, proven ROI in arc welding." },
+      look_alike: { score: 4, anchor: "Hartmann Metallbau AG", sim: 82, just: "Same industry (metal fabrication/welding), same ownership type (family-owned), same generational transition situation, similar size band.", attrs: ["Same industry", "Family-owned", "Generational transition", "Same region (North Germany)"] },
+      stakeholder: { score: 5, just: "Deputy MD Markus Johannsen (son, groomed successor, automation enthusiast), CEO Klaus Johannsen (founder, retiring), Welding Foreman Heiko Brandt \u2014 all named with contacts." },
+      contact: { score: 5, just: "Phone, email, address all present at company and individual level." },
+      triggers: { score: 5, just: "3 master welders retiring 2026-2027, son Markus taking over, Markus attended KUKA SME open day Oct 2025, blog post \u2018Warum wir automatisieren m\u00fcssen\u2019 Feb 2026, DB bridge framework Jan 2026." }
+    },
+    stakeholder: {
+      name: "Markus Johannsen", title: "Deputy Managing Director",
+      email: "m.johannsen@nds-schweisstechnik.de", phone: "+49 421 334 5502",
+      rule: "HC < 80 \u2014 but Deputy MD is explicitly positioned as successor and automation champion. Generational handover makes him the de facto decision-maker for automation investments.",
+      alternates: [
+        { name: "Klaus Johannsen", title: "CEO / Founder", reason: "Founder (63), retiring \u2014 still has final veto on major capex. Must be brought along, not bypassed." },
+        { name: "Heiko Brandt", title: "Welding Foreman / Master Welder", reason: "30-year tenure, respected by the floor. Potential resistance point \u2014 but if he becomes a champion, the whole team follows." }
+      ]
+    },
+    deal_keur: 250,
+    triggers: [
+      "3 master welders (avg age 55) retiring in 2026-2027 \u2014 no replacements found",
+      "Son Markus (32, Dipl.-Ing.) taking over operations as Klaus phases out",
+      "Markus attended KUKA SME open day in Augsburg (Oct 2025) \u2014 came back enthusiastic",
+      "Blog post \u2018Warum wir automatisieren m\u00fcssen\u2019 published (Feb 2026)",
+      "Won Deutsche Bahn bridge repair framework contract (Jan 2026)"
+    ],
+    cheat: {
+      best_time: "Wednesday or Thursday morning, 08:30",
+      opening: "Markus, I read your blog post \u2018Warum wir automatisieren m\u00fcssen.\u2019 We work with Hartmann Metallbau in N\u00fcrnberg \u2014 same situation 4 years ago: family firm, master welders retiring, no replacements. Karl Brenner (their Production Director) was also a sceptical master welder. Today they run 15 KUKA robots and Karl programs them himself. Happy to connect you for a 20-minute call?",
+      pains: [
+        "3 master welders retiring 2026-2027 with zero replacements \u2014 existential risk for the company\u2019s core capability",
+        "Generational handover \u2014 Markus needs to prove to his father that automation is the right path forward",
+        "Heiko (Welding Foreman, 30 years\u2019 tenure) may resist \u2014 but he\u2019s also the most important person to bring along",
+        "DB bridge contract requires consistent weld quality \u2014 can\u2019t afford variability as master welders leave"
+      ],
+      pillars: [
+        { p: "Robot systems & integration", t: "Start with one KR IONTEC or KR CYBERTECH arc welding cell for the most repetitive welds on the DB bridge contract. Keep master welders for complex one-off work. Prove the concept, then expand." },
+        { p: "Software & digital services", t: "KUKA.Sim for offline programming \u2014 critical for your low-volume, high-mix steel fabrication. Program the next job while the robot welds the current one." },
+        { p: "Service, maintenance & training", t: "KUKA College \u2014 train BOTH Markus AND Heiko. Making Heiko part of the solution, not the resistance. Master welders make the best robot welding programmers." }
+      ],
+      proof: [
+        "Hartmann Metallbau AG \u2014 Lisa Neumann at KUKA is their account manager. Same industry, same family ownership, same generational transition 4 years ago. Karl Brenner (Production Director) was exactly where Heiko is today \u2014 sceptical master welder turned robot champion. Happy to connect."
+      ],
+      qa: [
+        { q: "My father won\u2019t agree to this.", a: "Understood. The KUKA College approach is specifically designed for this \u2014 we train the master welder alongside the next generation. Would your father and Heiko join a half-day visit at Hartmann? Seeing Karl Brenner (who started just like Heiko) usually resolves 80% of the doubt." },
+        { q: "Our work is too varied for robots.", a: "KUKA.Sim enables offline programming for every job variant. Keep manual welding for truly one-off pieces \u2014 automate the repetitive 60% that your retiring welders do today. Hartmann runs the same high-mix model." },
+        { q: "We can\u2019t afford the downtime during installation.", a: "Install in parallel \u2014 the first cell goes next to your manual stations. Run it on the DB bridge repetitive welds while manual welding continues on complex work. Zero disruption." }
+      ],
+      cta: "Can I connect you with Karl Brenner at Hartmann for a 20-minute call? And we\u2019d love to have you, your father, and Heiko at the Augsburg demo center."
+    }
+  },
+  {
+    id: "05-mueller-kunststoff",
+    company: "M\u00fcller Kunststofftechnik GmbH",
+    industry: "Plastics injection moulding",
+    region: "Baden-W\u00fcrttemberg (Pforzheim)",
+    headcount: 62, sizeBand: "small",
+    revenue_meur: 18, ebit_margin_pct: 6.3,
+    growth: "Growing fast", ownership: "Founder-led",
+    score: 76, priority: "High",
+    factors: {
+      financial_fit: { score: 4, just: "Revenue \u20AC18M, fast growth (11\u219215\u219218), EBIT 6.3% \u2014 strong growth momentum." },
+      headcount_fit: { score: 4, just: "62 FTE in 50-79 growing band (48\u219255\u219262) \u2014 growing into sweet spot." },
+      industry: { score: 4, just: "Plastics injection moulding \u2014 proven robot application for machine loading/unloading." },
+      look_alike: { score: 3, anchor: "Schneider Pr\u00e4zisionsteile GmbH", sim: 65, just: "Adjacent industry (both automotive suppliers), same region (Baden-W\u00fcrttemberg), same founder-led ownership. Different application (injection moulding vs machining).", attrs: ["Adjacent automotive", "Same region", "Founder-led", "Growing"] },
+      stakeholder: { score: 4, just: "CEO/Founder Dirk M\u00fcller, Technical Director Nina Hartwig \u2014 key decision-makers identified. No dedicated VP Production." },
+      contact: { score: 5, just: "Phone, email, address all present." },
+      triggers: { score: 4, just: "Approved as Tier 2 supplier to Continental AG (Oct 2025), new medical device client B. Braun requiring cleanroom handling, HC +29% in 3 years." }
+    },
+    stakeholder: {
+      name: "Dirk M\u00fcller", title: "CEO / Founder",
+      email: "d.mueller@mueller-kunststoff.de", phone: "+49 7231 445 601",
+      rule: "HC < 80, no dedicated VP Production \u2192 CEO is primary. Founder-led; sole decision-maker.",
+      alternates: [
+        { name: "Nina Hartwig", title: "Technical Director", reason: "Owns process engineering; would evaluate and champion the technical solution." }
+      ]
+    },
+    deal_keur: 220,
+    triggers: [
+      "Approved as Tier 2 supplier to Continental AG (Oct 2025) \u2014 quality step-change required",
+      "New medical device client B. Braun requiring cleanroom-grade part handling",
+      "Headcount up 29% in 3 years (48\u219262) \u2014 outgrowing manual processes",
+      "One old Mitsubishi robot struggling with reliability"
+    ],
+    cheat: {
+      best_time: "Tuesday or Thursday morning, 08:00",
+      opening: "Dirk, congratulations on the Continental approval \u2014 that\u2019s a major milestone. We help injection moulders like you automate machine loading \u2014 our LBR iisy cobot can tend 4 machines and your operators program it themselves by hand-guiding. No robotics engineer needed. Worth 20 minutes?",
+      pains: [
+        "Manual part removal from 12 injection moulding machines is the bottleneck \u2014 operators spend 70% of their time loading/unloading",
+        "Continental quality demands step-change from manual handling",
+        "B. Braun medical components require cleanroom-grade handling that manual can\u2019t guarantee",
+        "Old Mitsubishi robot is unreliable and no one knows how to program it"
+      ],
+      pillars: [
+        { p: "Robot systems & integration", t: "LBR iisy cobots for machine loading/unloading \u2014 start with 2-3 machines, prove the concept. Hand-guiding programming means your operators own it. For the B. Braun cleanroom work: KR AGILUS cleanroom variant." },
+        { p: "Software & digital services", t: "Not critical at this stage \u2014 grow into KUKA.Sim as the fleet expands." },
+        { p: "Service, maintenance & training", t: "KUKA College 2-day cobot course for Nina Hartwig and 2 operators. Self-sufficiency from day one." }
+      ],
+      proof: [
+        "Schneider Pr\u00e4zisionsteile GmbH \u2014 same region (Baden-W\u00fcrttemberg), automotive supplier. They started with 2 robots and now run 12.",
+        "KUKA SME success stories \u2014 injection moulders are the fastest-growing segment for LBR iisy deployments."
+      ],
+      qa: [
+        { q: "We\u2019re too small for robots.", a: "LBR iisy is designed exactly for companies your size \u2014 costs less than one FTE per year at 2-shift utilisation. And you don\u2019t need a robotics engineer." },
+        { q: "Our Werkzeugmacher mentality is hands-on.", a: "That\u2019s exactly why LBR iisy uses hand-guiding \u2014 you literally teach it by moving it. Your toolmaker precision translates directly." },
+        { q: "Medical cleanroom adds complexity.", a: "We do this at Bayer Pharma-Pack \u2014 KR AGILUS cleanroom is rated for ISO Class 7. We\u2019ll scope the cleanroom cell separately from the injection-moulding automation." }
+      ],
+      cta: "Can I bring an LBR iisy to your facility for a free demo day? KUKA\u2019s mobile demo programme for SMEs \u2014 we set up, you try it on your machines."
+    }
+  },
+  {
+    id: "03-alpen-food",
+    company: "Alpen Feinkost GmbH",
+    industry: "Food processing (packaging)",
+    region: "Bavaria (Kempten / Allg\u00e4u)",
+    headcount: 95, sizeBand: "mid",
+    revenue_meur: 31, ebit_margin_pct: 4.8,
+    growth: "Stable / modest growth", ownership: "Family-owned (3rd generation)",
+    score: 72, priority: "High",
+    factors: {
+      financial_fit: { score: 3, just: "Revenue \u20AC31M in band, modest growth (28\u219230\u219231), EBIT 4.8% \u2014 positive but thin margins typical for food processing." },
+      headcount_fit: { score: 4, just: "95 FTE in 80-250 band, stable (90\u219292\u219295)." },
+      industry: { score: 4, just: "Food processing/packaging \u2014 proven palletising and packaging automation applications." },
+      look_alike: { score: 3, anchor: "Bayer Pharma-Pack GmbH", sim: 55, just: "Adjacent industry (both regulated packaging), similar size band. Different sector (food vs pharma) but overlapping applications (palletising, packaging).", attrs: ["Adjacent packaging", "Similar size", "Regulated environment"] },
+      stakeholder: { score: 4, just: "CEO Maximilian Huber (3rd gen), Production Manager Wolfgang Gruber, CFO Elisabeth Huber-Maier. No VP Production title." },
+      contact: { score: 5, just: "Phone, email, address all present." },
+      triggers: { score: 4, just: "Lost 12 seasonal workers to competitors in 2025, major Edeka contract requiring 30% volume increase, IFS Food certification audit Mar 2026 incentivising hygiene automation." }
+    },
+    stakeholder: {
+      name: "Maximilian Huber", title: "CEO (3rd generation)",
+      email: "m.huber@alpen-feinkost.de", phone: "+49 831 567 2201",
+      rule: "HC < 80, no VP Production \u2192 CEO is primary. Family-owned 3rd generation; owner makes all investment decisions.",
+      alternates: [
+        { name: "Wolfgang Gruber", title: "Production Manager", reason: "Runs the floor; operational champion for automation." },
+        { name: "Elisabeth Huber-Maier", title: "CFO", reason: "Family CFO; owns investment budget." }
+      ]
+    },
+    deal_keur: 280,
+    triggers: [
+      "Lost 12 seasonal workers to competitors in 2025 \u2014 first time couldn\u2019t fill all shifts",
+      "Major Edeka contract requiring 30% volume increase for 2026",
+      "IFS Food certification audit (Mar 2026) incentivising hygiene automation",
+      "Organic product line launched 2025 \u2014 premium products need premium handling"
+    ],
+    cheat: {
+      best_time: "Wednesday morning, 08:00 (before production ramp)",
+      opening: "Maximilian, I understand you lost 12 seasonal workers last year and the Edeka contract needs 30% more volume. We work with food producers across Bavaria facing the same seasonal labour crisis. One palletising cell replaces 3 workers per shift and runs through the Christmas peak without calling in sick. Worth 20 minutes?",
+      pains: [
+        "Seasonal labour crisis \u2014 lost 12 workers in 2025, first time couldn\u2019t staff all shifts",
+        "Edeka contract volume commitment that can\u2019t be met with current manual capacity",
+        "IFS Food audit pushing for hygienic automation \u2014 manual handling is a contamination risk",
+        "3rd-generation family legacy at risk if they can\u2019t scale to meet retail partner demands"
+      ],
+      pillars: [
+        { p: "Robot systems & integration", t: "KR QUANTEC hygienic-design palletising cell for end-of-line packaging. IP67-rated, washdown compatible. Start with one cell for the Edeka line." },
+        { p: "Software & digital services", t: "Not critical at this stage \u2014 start simple, grow into digital." },
+        { p: "Service, maintenance & training", t: "KUKA Care Basic + 2-day operator training for Wolfgang and 2 line workers." }
+      ],
+      proof: [
+        "No exact food customer anchor \u2014 reference KUKA food & beverage case studies (hygienic design, washdown rated).",
+        "Bayer Pharma-Pack shows KUKA works in hygienic, regulated environments \u2014 similar requirements."
+      ],
+      qa: [
+        { q: "Food processing is different from automotive.", a: "KUKA has food-grade robots \u2014 IP67 rated, washdown compatible, no exposed cables. Used by food producers across Europe." },
+        { q: "We\u2019re a traditional Allg\u00e4u family business.", a: "So were the dairy cooperatives that automated 10 years ago and are now the ones attracting the workers you lost last year. Tradition is in the product, not in the process." },
+        { q: "Can a robot handle our product variety?", a: "Quick changeover with recipe-based programming. One robot handles 20+ SKU configurations \u2014 your operator selects the recipe on a tablet." }
+      ],
+      cta: "Can I come for a 2-hour site visit to see your end-of-line setup? No cost, no commitment \u2014 just a professional opinion on what\u2019s automatable."
+    }
+  },
+  {
+    id: "06-weber-logistik",
+    company: "Weber Logistik & Fulfillment GmbH",
+    industry: "Warehouse logistics / e-commerce",
+    region: "NRW (Dortmund)",
+    headcount: 310, sizeBand: "large",
+    revenue_meur: 42, ebit_margin_pct: 3.2,
+    growth: "Fast growth", ownership: "Founder-led",
+    score: 58, priority: "Medium",
+    factors: {
+      financial_fit: { score: 3, just: "Revenue \u20AC42M in band, fast growth (24\u219233\u219242), EBIT 3.2% \u2014 thin margins typical for fulfillment." },
+      headcount_fit: { score: 2, just: "310 FTE \u2014 above the 250 sweet spot for KUKA\u2019s core manufacturing ICP. Logistics rather than manufacturing." },
+      industry: { score: 3, just: "Warehouse logistics \u2014 moderate automation potential (AMRs + palletising), not core manufacturing." },
+      look_alike: { score: 2, anchor: "(no exact match)", sim: 30, just: "No logistics customer in KUKA anchor book. Emerging segment for AMR portfolio.", attrs: ["Emerging segment"] },
+      stakeholder: { score: 4, just: "CEO Jan Weber, COO Lisa Weber, Warehouse Director Michael Braun \u2014 all named with contacts." },
+      contact: { score: 5, just: "Phone, email, address all present." },
+      triggers: { score: 4, just: "DHL partnership Nov 2025, new 15,000m\u00b2 warehouse opening Q2 2026, worker turnover 28% (industry avg 18%), Amazon fulfillment center opened 20km away Sep 2025." }
+    },
+    stakeholder: {
+      name: "Jan Weber", title: "CEO / Co-Founder",
+      email: "j.weber@weber-logistik.de", phone: "+49 231 912 4401",
+      rule: "HC \u2265 80 but logistics (non-manufacturing); CEO is primary as strategic automation buyer.",
+      alternates: [
+        { name: "Lisa Weber", title: "COO / Co-Founder", reason: "Runs operations; would own AMR deployment." },
+        { name: "Michael Braun", title: "Warehouse Director", reason: "Daily operations; technical evaluator for warehouse automation." }
+      ]
+    },
+    deal_keur: 350,
+    triggers: [
+      "DHL partnership announced (Nov 2025) \u2014 higher throughput requirements",
+      "New 15,000m\u00b2 warehouse opening Q2 2026 \u2014 greenfield automation opportunity",
+      "Worker turnover at 28% vs 18% industry average \u2014 Amazon competing for workers",
+      "Manual pick-and-pack model doesn\u2019t scale for DHL volumes"
+    ],
+    cheat: {
+      best_time: "Tuesday or Thursday morning, 09:00",
+      opening: "Jan, I noticed the new warehouse opening in Q2 \u2014 that\u2019s a greenfield opportunity to get automation right from day one. We\u2019ve seen fulfillment operators with 28% turnover cut it in half by deploying KUKA AMRs for internal transport and palletising robots for outbound. Worth 20 minutes to discuss the new warehouse layout?",
+      pains: [
+        "28% worker turnover \u2014 Amazon nearby is pulling warehouse workers with higher pay",
+        "New 15,000m\u00b2 warehouse is greenfield \u2014 will be hard to automate later if built manual",
+        "DHL partnership requires higher throughput than manual pick-and-pack can deliver",
+        "Workers doing repetitive lifting tasks \u2014 injury rates and absenteeism rising"
+      ],
+      pillars: [
+        { p: "Robot systems & integration", t: "KUKA AMRs (autonomous mobile robots) for internal transport + KR QUANTEC for palletising/depalletising at inbound and outbound docks." },
+        { p: "Software & digital services", t: "smartPRODUCTION for warehouse flow monitoring and AMR fleet management." },
+        { p: "Service, maintenance & training", t: "KUKA Care Basic for the robot fleet + operator training for the warehouse team." }
+      ],
+      proof: [
+        "Limited direct anchor \u2014 KUKA\u2019s AMR portfolio is deployed at Daimler, BMW, and other manufacturing logistics operations. Reference KUKA logistics case studies."
+      ],
+      qa: [
+        { q: "We\u2019re logistics, not manufacturing.", a: "KUKA\u2019s AMR portfolio is designed for exactly this \u2014 goods-to-person, internal transport, automated palletising. We\u2019re in 50+ logistics installations across Europe." },
+        { q: "We\u2019re growing too fast to stop and automate.", a: "The new warehouse IS the stop \u2014 automate from day one. Retrofitting later costs 3x more." },
+        { q: "Our workers don\u2019t want robots.", a: "Robots handle the repetitive lifting \u2014 your workers handle the decisions. Turnover drops because the job gets better, not worse." }
+      ],
+      cta: "Can I come see the new warehouse site during construction? Perfect timing to design the automation in before the racking goes up."
+    }
+  },
+  {
+    id: "09-bergmann-verpackung",
+    company: "Bergmann Verpackungstechnik GmbH",
+    industry: "Contract packaging (consumer goods)",
+    region: "NRW (Bielefeld)",
+    headcount: 42, sizeBand: "small",
+    revenue_meur: 12, ebit_margin_pct: 7.2,
+    growth: "Growing", ownership: "Founder-led",
+    score: 56, priority: "Medium",
+    factors: {
+      financial_fit: { score: 3, just: "Revenue \u20AC12M in band, growing (8\u219210\u219212), EBIT 7.2% \u2014 healthy for contract packaging." },
+      headcount_fit: { score: 3, just: "42 FTE in 30-49 growing band \u2014 small but growing." },
+      industry: { score: 3, just: "Contract packaging \u2014 moderate automation potential (palletising, case packing)." },
+      look_alike: { score: 2, anchor: "Bayer Pharma-Pack GmbH", sim: 48, just: "Adjacent industry (both packaging), similar size band. Different product types (consumer goods vs pharma).", attrs: ["Adjacent packaging", "Similar size"] },
+      stakeholder: { score: 4, just: "CEO/Founder Peter Bergmann, Production Manager Torsten Lange \u2014 key people identified." },
+      contact: { score: 5, just: "Phone, email, address all present." },
+      triggers: { score: 4, just: "Henkel contract with automation clauses (Sep 2025), second packaging hall completion Apr 2026, can\u2019t hire for night shifts." }
+    },
+    stakeholder: {
+      name: "Peter Bergmann", title: "CEO / Founder",
+      email: "p.bergmann@bergmann-verpackung.de", phone: "+49 521 776 3301",
+      rule: "HC < 80, no VP Ops \u2192 CEO is primary. Founder-led; sole decision-maker.",
+      alternates: [
+        { name: "Torsten Lange", title: "Production Manager", reason: "Runs the packaging lines daily; technical champion." }
+      ]
+    },
+    deal_keur: 200,
+    triggers: [
+      "Henkel contract with explicit automation clauses (Sep 2025)",
+      "Second packaging hall completion (Apr 2026) \u2014 greenfield opportunity",
+      "Can\u2019t hire workers for night shifts \u2014 3 open positions unfilled"
+    ],
+    cheat: {
+      best_time: "Wednesday morning, 09:00",
+      opening: "Peter, congratulations on the Henkel contract. I noticed the automation clauses \u2014 we help packaging companies exactly like yours automate end-of-line with KUKA palletising cells. The new hall you\u2019re building is the perfect moment to start. Worth 20 minutes?",
+      pains: [
+        "Henkel contract has automation clauses that must be met",
+        "Can\u2019t hire for night shifts \u2014 3 open positions, no applicants",
+        "Manual case packing and palletising is 8 workers per shift \u2014 expensive and error-prone",
+        "Second hall is greenfield but no automation plan yet"
+      ],
+      pillars: [
+        { p: "Robot systems & integration", t: "KR QUANTEC palletising cell for end-of-line case packing and pallet stacking \u2014 standardised cell, fast deployment." },
+        { p: "Software & digital services", t: "Not critical at this stage \u2014 keep it simple." },
+        { p: "Service, maintenance & training", t: "KUKA Care Basic + 1-day operator training for Torsten and the shift leaders." }
+      ],
+      proof: [
+        "No exact packaging anchor \u2014 reference KUKA palletising case studies across consumer goods.",
+        "Bayer Pharma-Pack shows KUKA works in packaging environments \u2014 similar end-of-line automation."
+      ],
+      qa: [
+        { q: "We\u2019re too small.", a: "KUKA\u2019s standard palletising cells are designed for exactly your throughput range \u2014 one cell handles up to 12 cycles/minute." },
+        { q: "Night shifts are the problem, not daytime.", a: "Palletising cells run 24/7, no night-shift premium. That\u2019s the whole point." },
+        { q: "The second hall isn\u2019t ready yet.", a: "Perfect timing \u2014 design the automation in before the concrete cures. We can have the cell spec ready by the time you\u2019re pouring the slab." }
+      ],
+      cta: "Can I invite you to a KUKA palletising webinar next month? Plus a free site assessment of the new hall once the shell is up."
+    }
+  },
+  {
+    id: "10-fischer-medizintechnik",
+    company: "Fischer Medizintechnik GmbH",
+    industry: "Medical devices (surgical instruments)",
+    region: "Baden-W\u00fcrttemberg (Tuttlingen)",
+    headcount: 15, sizeBand: "small",
+    revenue_meur: 4.8, ebit_margin_pct: 3.5,
+    growth: "Fast growth", ownership: "Founder-led",
+    score: 38, priority: "Low",
+    factors: {
+      financial_fit: { score: 1, just: "Revenue \u20AC4.8M below the \u20AC5M floor. EBIT 3.5% \u2014 reinvesting for growth. Angel-funded." },
+      headcount_fit: { score: 1, just: "15 FTE in the 10-19 band \u2014 below SME sweet spot." },
+      industry: { score: 5, just: "Medical device manufacturing \u2014 high-precision, regulated, top of rubric." },
+      look_alike: { score: 2, anchor: "Novara Technologies GmbH", sim: 35, just: "Similar precision manufacturing profile but different industry (medtech vs electronics). Big size mismatch (180 vs 15 FTE).", attrs: ["Precision manufacturing", "Growing"] },
+      stakeholder: { score: 4, just: "CEO/Founder Dr. Julia Fischer (biomedical engineer), Production Lead Andreas Keller \u2014 key people identified." },
+      contact: { score: 5, just: "Phone, email, address all present." },
+      triggers: { score: 3, just: "ISO 13485 recertification Apr 2026, FDA 510(k) submission pending, angel round \u20AC800K Dec 2025." }
+    },
+    stakeholder: {
+      name: "Dr. Julia Fischer", title: "CEO / Founder",
+      email: "j.fischer@fischer-medtech.de", phone: "+49 7461 178 901",
+      rule: "HC < 80, founder-led startup \u2192 CEO is primary contact.",
+      alternates: [
+        { name: "Andreas Keller", title: "Master Toolmaker / Production Lead", reason: "Runs production daily; would operate and program any cobot." }
+      ]
+    },
+    deal_keur: 85,
+    triggers: [
+      "ISO 13485 recertification (Apr 2026) \u2014 process automation evidence needed",
+      "FDA 510(k) submission pending \u2014 requires traceable, repeatable processes",
+      "Angel round \u20AC800K closed (Dec 2025) \u2014 funded for next growth phase"
+    ],
+    cheat: {
+      best_time: "Thursday afternoon, 14:00",
+      opening: "Dr. Fischer, I noticed your FDA 510(k) submission \u2014 at KUKA we work with several medtech companies in Tuttlingen. Our LBR iisy cobot is perfect for CNC machine loading in regulated environments: traceable, repeatable, and your machinists can program it themselves. Worth a 15-minute call?",
+      pains: [
+        "ISO 13485 recertification needs process automation evidence",
+        "FDA submission requires traceable and repeatable manufacturing processes",
+        "Skilled machinists are too expensive to spend on CNC loading \u2014 below their skill level",
+        "At 15 FTE every minute counts \u2014 can\u2019t afford dedicated machine-loading operators"
+      ],
+      pillars: [
+        { p: "Robot systems & integration", t: "One LBR iisy cobot for CNC machine loading \u2014 can tend 2-3 machines, frees machinists for programming and setup." },
+        { p: "Software & digital services", t: "Not critical yet \u2014 grow into digital as the fleet expands." },
+        { p: "Service, maintenance & training", t: "KUKA College \u2014 one 2-day course and Andreas programs the cobot himself." }
+      ],
+      proof: [
+        "Novara Technologies (electronics, different industry but same precision requirements).",
+        "KUKA medtech case studies from the Tuttlingen cluster."
+      ],
+      qa: [
+        { q: "We\u2019re only 15 people.", a: "LBR iisy costs less than one FTE per year and works three shifts. It\u2019s designed for companies exactly your size." },
+        { q: "We need to focus on the FDA submission.", a: "Automated CNC loading with traceability IS evidence for the FDA. Process repeatability is what they want to see." },
+        { q: "Can a cobot handle surgical-instrument quality?", a: "LBR iisy has \u00b10.01mm repeatability \u2014 more consistent than any human operator." }
+      ],
+      cta: "INCUBATION: Invite Dr. Fischer to KUKA College open day in Augsburg for an LBR iisy hands-on demo. Keep relationship warm for when Fischer crosses 30 FTE."
+    }
+  }
+];
+
+// Rubric weights
+const WEIGHTS = {
+  financial_fit: 18, headcount_fit: 18, industry: 14,
+  look_alike: 18, stakeholder: 12, contact: 8, triggers: 12
+};
+const FACTOR_LABELS = {
+  financial_fit: "Financial fit", headcount_fit: "Headcount fit",
+  industry: "Industry automation-intensity", look_alike: "Look-alike to existing book",
+  stakeholder: "Stakeholder identifiability", contact: "Contact-channel completeness",
+  triggers: "Trigger events"
+};
+
+// ───────────────────────────────────────────────────────────
+// State
+// ───────────────────────────────────────────────────────────
+let currentSort = { col: "rank", asc: true };
+let filters = { priority: "all", size: "all", industry: "all" };
+
+// ───────────────────────────────────────────────────────────
+// Screen 0 → animation → Screen 1
+// ───────────────────────────────────────────────────────────
+const overlay = document.getElementById("overlay");
+const runBtn = document.getElementById("runBtn");
+const stepIds = ["s1","s2","s3","s4","s5"];
+
+runBtn.addEventListener("click", async () => {
+  runBtn.disabled = true;
+  overlay.classList.add("visible");
+  for (let i = 0; i < stepIds.length; i++) {
+    const el = document.getElementById(stepIds[i]);
+    el.classList.add("active");
+    el.querySelector(".step-icon").innerHTML = '<div class="spinner"></div>';
+    await sleep(380 + Math.random() * 220);
+    el.classList.remove("active");
+    el.classList.add("done");
+    el.querySelector(".step-icon").innerHTML = '<div class="checkmark">&#10003;</div>';
+  }
+  await sleep(380);
+  overlay.classList.remove("visible");
+  showScreen("screenPipeline");
+  renderPipeline();
+});
+
+function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+// ───────────────────────────────────────────────────────────
+// Screen navigation
+// ───────────────────────────────────────────────────────────
+function showScreen(id) {
+  document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+  document.getElementById("headerBack").style.display = (id === "screenDetail") ? "block" : "none";
+  window.scrollTo(0, 0);
+}
+
+document.getElementById("headerBack").addEventListener("click", () => showScreen("screenPipeline"));
+
+// ───────────────────────────────────────────────────────────
+// Pipeline rendering
+// ───────────────────────────────────────────────────────────
+function initFilters() {
+  const indSel = document.getElementById("filterIndustry");
+  const inds = [...new Set(PROSPECTS.map(p => p.industry))].sort();
+  inds.forEach(i => {
+    const o = document.createElement("option");
+    o.value = i; o.textContent = i;
+    indSel.appendChild(o);
+  });
+  document.getElementById("filterPriority").addEventListener("change", e => { filters.priority = e.target.value; renderPipeline(); });
+  document.getElementById("filterSize").addEventListener("change", e => { filters.size = e.target.value; renderPipeline(); });
+  document.getElementById("filterIndustry").addEventListener("change", e => { filters.industry = e.target.value; renderPipeline(); });
+
+  document.querySelectorAll(".prospect-table th[data-sort]").forEach(th => {
+    th.addEventListener("click", () => {
+      const col = th.dataset.sort;
+      if (currentSort.col === col) currentSort.asc = !currentSort.asc;
+      else { currentSort.col = col; currentSort.asc = (col === "rank" || col === "company"); }
+      renderPipeline();
+    });
+  });
+}
+
+function getFilteredSorted() {
+  let rows = PROSPECTS.map((p, i) => ({ ...p, rank: i + 1 }));
+  if (filters.priority !== "all") rows = rows.filter(r => r.priority === filters.priority);
+  if (filters.size !== "all") rows = rows.filter(r => r.sizeBand === filters.size);
+  if (filters.industry !== "all") rows = rows.filter(r => r.industry === filters.industry);
+  const sortMap = {
+    rank: r => r.rank, company: r => r.company.toLowerCase(),
+    industry: r => r.industry.toLowerCase(), headcount: r => r.headcount,
+    score: r => r.score, priority: r => ({High:0,Medium:1,Low:2}[r.priority]),
+    anchor: r => (r.factors.look_alike.anchor || "").toLowerCase(),
+    stakeholder: r => r.stakeholder.name.toLowerCase(),
+    deal: r => r.deal_keur
+  };
+  const fn = sortMap[currentSort.col] || sortMap.rank;
+  rows.sort((a, b) => {
+    const va = fn(a), vb = fn(b);
+    if (va < vb) return currentSort.asc ? -1 : 1;
+    if (va > vb) return currentSort.asc ? 1 : -1;
+    return 0;
+  });
+  return rows;
+}
+
+function scoreColor(s) {
+  if (s >= 70) return "#16a34a";
+  if (s >= 50) return "#d97706";
+  return "#94a3b8";
+}
+
+function initials(name) {
+  return name.split(" ").map(w => w[0]).slice(0, 2).join("").toUpperCase();
+}
+
+function renderPipeline() {
+  const rows = getFilteredSorted();
+  const tbody = document.getElementById("pipelineBody");
+  tbody.innerHTML = "";
+  rows.forEach(p => {
+    const tr = document.createElement("tr");
+    tr.className = "row";
+    tr.innerHTML = `
+      <td class="rank-cell">${p.rank}</td>
+      <td><div class="company-cell">${p.company}</div></td>
+      <td class="industry-cell">${p.industry}</td>
+      <td>${p.headcount}</td>
+      <td class="score-cell">
+        <span class="score-bar"><span class="score-bar-fill" style="width:${p.score}%;background:${scoreColor(p.score)}"></span></span>
+        ${p.score}
+      </td>
+      <td><span class="priority-pill pri-${p.priority}">${p.priority}</span></td>
+      <td>${p.factors.look_alike.anchor || "\u2014"} <span class="title">(${p.factors.look_alike.sim}%)</span></td>
+      <td>
+        <span class="stakeholder-chip">
+          <span class="avatar">${initials(p.stakeholder.name)}</span>
+          <span>${p.stakeholder.name}<br><span class="title">${p.stakeholder.title}</span></span>
+        </span>
+      </td>
+      <td class="premium-cell">\u20AC${p.deal_keur}K</td>
+    `;
+    tr.addEventListener("click", () => openDetail(p.id));
+    tbody.appendChild(tr);
+  });
+
+  document.querySelectorAll(".prospect-table th").forEach(th => {
+    th.classList.remove("sorted", "asc");
+    if (th.dataset.sort === currentSort.col) {
+      th.classList.add("sorted");
+      if (currentSort.asc) th.classList.add("asc");
+    }
+  });
+  document.getElementById("filterCount").textContent = `Showing ${rows.length} of ${PROSPECTS.length} prospects`;
+
+  const hi = PROSPECTS.filter(p => p.priority === "High").length;
+  const me = PROSPECTS.filter(p => p.priority === "Medium").length;
+  const lo = PROSPECTS.filter(p => p.priority === "Low").length;
+  document.getElementById("statHigh").textContent = hi;
+  document.getElementById("statMed").textContent = me;
+  document.getElementById("statLow").textContent = lo;
+  const totDeal = PROSPECTS.reduce((s, p) => s + p.deal_keur, 0);
+  document.getElementById("statPremium").textContent = `~\u20AC${(totDeal/1000).toFixed(1)}M`;
+}
+
+// ───────────────────────────────────────────────────────────
+// Prospect detail
+// ───────────────────────────────────────────────────────────
+function openDetail(id) {
+  const p = PROSPECTS.find(x => x.id === id);
+  if (!p) return;
+  renderDetailHeader(p);
+  renderScoringTab(p);
+  renderStakeholderTab(p);
+  renderCheatTab(p);
+  document.querySelectorAll(".tab").forEach(t => t.classList.toggle("active", t.dataset.tab === "scoring"));
+  document.querySelectorAll(".tab-content").forEach(c => c.classList.remove("active"));
+  document.getElementById("tab-scoring").classList.add("active");
+  showScreen("screenDetail");
+}
+
+function renderDetailHeader(p) {
+  const el = document.getElementById("detailHeader");
+  el.innerHTML = `
+    <div class="detail-title">
+      <h2>${p.company}</h2>
+      <div class="sub">${p.industry} \u00b7 ${p.region}</div>
+      <div class="pill-row">
+        <span class="meta-pill">${p.headcount} FTE</span>
+        <span class="meta-pill">\u20AC${p.revenue_meur}M revenue</span>
+        <span class="meta-pill">EBIT ${p.ebit_margin_pct > 0 ? "+" : ""}${p.ebit_margin_pct}%</span>
+        <span class="meta-pill">${p.ownership}</span>
+        <span class="meta-pill">${p.growth}</span>
+        <span class="priority-pill pri-${p.priority}">${p.priority} priority</span>
+      </div>
+    </div>
+    <div class="detail-score-block">
+      <div class="detail-score-num" style="color:${scoreColor(p.score)}">${p.score}</div>
+      <div class="detail-score-cap">Total score / 100</div>
+      <div class="detail-score-bar"><div class="detail-score-fill" style="width:${p.score}%;background:${scoreColor(p.score)}"></div></div>
+      <div style="font-size:.82rem;color:var(--g500);margin-top:8px">Est. deal value: <strong style="color:var(--g800)">\u20AC${p.deal_keur}K</strong></div>
+    </div>
+  `;
+}
+
+function renderScoringTab(p) {
+  const el = document.getElementById("tab-scoring");
+  const factorRows = Object.keys(WEIGHTS).map(k => {
+    const f = p.factors[k];
+    const pct = (f.score / 5) * 100;
+    return `
+      <div class="factor-row">
+        <div class="factor-top">
+          <div class="factor-name">${FACTOR_LABELS[k]} <span class="weight">(weight ${WEIGHTS[k]})</span></div>
+          <div class="factor-score-pill s${f.score}">${f.score}/5</div>
+        </div>
+        <div class="factor-bar"><div class="factor-bar-fill" style="width:${pct}%;background:${scoreColor(f.score * 20)}"></div></div>
+        <div class="factor-just">${f.just}</div>
+      </div>
+    `;
+  }).join("");
+
+  const la = p.factors.look_alike;
+  const attrs = (la.attrs || []).map(a => `<span class="attr-pill">${a}</span>`).join("");
+  const triggers = (p.triggers || []).map(t => `<li>${t}</li>`).join("");
+  const triggerBlock = p.triggers && p.triggers.length
+    ? `<div class="trigger-block"><h3>Trigger events</h3><div class="trigger-list"><ul>${triggers}</ul></div></div>`
+    : "";
+
+  el.innerHTML = `
+    <div class="scoring-grid">
+      <div class="factor-list">
+        <h3>7-factor rubric breakdown</h3>
+        ${factorRows}
+      </div>
+      <div>
+        <h3 style="font-size:.82rem;font-weight:700;color:var(--g500);text-transform:uppercase;letter-spacing:.5px;margin-bottom:14px">Look-alike: closest existing customer</h3>
+        <div class="lookalike-card">
+          <div class="lookalike-anchor">${la.anchor || "\u2014"}</div>
+          <div style="font-size:.82rem;color:var(--g500)">Existing KUKA customer</div>
+          <div class="lookalike-sim">
+            <div class="lookalike-sim-bar"><div class="lookalike-sim-fill" style="width:${la.sim}%"></div></div>
+            <div class="lookalike-sim-pct">${la.sim}%</div>
+          </div>
+          <div class="lookalike-just">${la.just}</div>
+          <div class="lookalike-attrs">${attrs}</div>
+        </div>
+        ${triggerBlock}
+      </div>
+    </div>
+  `;
+}
+
+function renderStakeholderTab(p) {
+  const el = document.getElementById("tab-stakeholder");
+  const s = p.stakeholder;
+  const channels = [
+    s.email ? `<span class="ch">&#9993; ${s.email}</span>` : `<span class="ch muted">No email available</span>`,
+    s.phone ? `<span class="ch">&#9742; ${s.phone}</span>` : `<span class="ch muted">No direct phone</span>`
+  ].join("");
+  const alts = s.alternates.map(a => `
+    <div class="alt-card">
+      <div class="stake-avatar">${initials(a.name)}</div>
+      <div class="alt-info">
+        <div class="alt-name">${a.name}</div>
+        <div class="alt-title">${a.title}</div>
+        <div class="alt-reason">${a.reason}</div>
+      </div>
+    </div>
+  `).join("");
+  el.innerHTML = `
+    <div class="stakeholder-primary">
+      <div class="stake-avatar">${initials(s.name)}</div>
+      <div class="stake-info">
+        <div class="stake-name">${s.name}</div>
+        <div class="stake-title">${s.title}</div>
+        <div class="stake-channels">${channels}</div>
+      </div>
+    </div>
+    <div class="stake-rule">
+      <h4>Rule applied</h4>
+      <p>${s.rule}</p>
+    </div>
+    <div class="alternates-block">
+      <h3>Alternates</h3>
+      ${alts}
+    </div>
+  `;
+}
+
+function renderCheatTab(p) {
+  const el = document.getElementById("tab-cheat");
+  const c = p.cheat;
+  const phone = p.stakeholder.phone || "(no direct phone)";
+  const email = p.stakeholder.email || "(no email)";
+  const pains = c.pains.map(x => `<li>${x}</li>`).join("");
+  const pillars = c.pillars.map((x, i) => `<li><strong>${x.p}</strong> &mdash; ${x.t}</li>`).join("");
+  const proof = c.proof.length ? c.proof.map(x => `<li>${x}</li>`).join("") : "<li><em>No customer anchor available</em></li>";
+  const qa = c.qa.length ? c.qa.map(x => `<div class="qa"><div class="q">Q: ${x.q}</div><div class="a">A: ${x.a}</div></div>`).join("") : "<p><em>No objection set defined for low-priority prospects.</em></p>";
+  el.innerHTML = `
+    <div class="call-strip">
+      <div><div class="label">Calling</div><div class="val">${p.stakeholder.name}</div></div>
+      <div class="vert"></div>
+      <div><div class="label">Title</div><div class="val">${p.stakeholder.title}</div></div>
+      <div class="vert"></div>
+      <div><div class="label">Phone</div><div class="val">${phone}</div></div>
+      <div class="vert"></div>
+      <div><div class="label">Email</div><div class="val">${email}</div></div>
+      <div class="vert"></div>
+      <div><div class="label">Best time</div><div class="val">${c.best_time}</div></div>
+    </div>
+
+    <div class="cheat-section opening">
+      <h3>Opening hook ${copyBtn("opening", c.opening)}</h3>
+      <div class="body"><p>${c.opening}</p></div>
+    </div>
+
+    <div class="cheat-section">
+      <h3>Hypothesised pain points ${copyBtn("pains", c.pains.join("\n\u2022 "))}</h3>
+      <div class="body"><ul>${pains}</ul></div>
+    </div>
+
+    <div class="cheat-section">
+      <h3>The KUKA pitch (3 pillars) ${copyBtn("pillars", c.pillars.map(x => x.p + ": " + x.t).join("\n"))}</h3>
+      <div class="body"><ol>${pillars}</ol></div>
+    </div>
+
+    <div class="cheat-section">
+      <h3>Proof points ${copyBtn("proof", c.proof.join("\n"))}</h3>
+      <div class="body"><ul>${proof}</ul></div>
+    </div>
+
+    <div class="cheat-section qa-block">
+      <h3>Objection handling</h3>
+      <div class="body">${qa}</div>
+    </div>
+
+    <div class="cheat-section cta">
+      <h3>CTA ${copyBtn("cta", c.cta)}</h3>
+      <div class="body"><p>${c.cta}</p></div>
+    </div>
+  `;
+  el.querySelectorAll(".copy-btn").forEach(b => b.addEventListener("click", e => {
+    e.stopPropagation();
+    navigator.clipboard.writeText(b.dataset.text || "").then(() => {
+      b.textContent = "Copied";
+      b.classList.add("copied");
+      setTimeout(() => { b.textContent = "Copy"; b.classList.remove("copied"); }, 1400);
+    });
+  }));
+}
+
+function copyBtn(key, text) {
+  const safe = (text || "").replace(/"/g, "&quot;");
+  return `<button class="copy-btn" data-text="${safe}" data-key="${key}">Copy</button>`;
+}
+
+// Tab switcher (within detail screen)
+document.querySelectorAll(".tab").forEach(t => {
+  t.addEventListener("click", () => {
+    document.querySelectorAll(".tab").forEach(x => x.classList.remove("active"));
+    t.classList.add("active");
+    document.querySelectorAll(".tab-content").forEach(c => c.classList.remove("active"));
+    document.getElementById("tab-" + t.dataset.tab).classList.add("active");
+  });
+});
+
+// ───────────────────────────────────────────────────────────
+// Integration Layer — Mock system data
+// ───────────────────────────────────────────────────────────
+const INT_SYSTEMS = [
+  { id: "sap-s4",     name: "SAP S/4HANA",         type: "ERP",       icon: "\u{1F537}", cat: "erp",       status: "connected", entities: "428K", quality: 91, syncAgo: 2 },
+  { id: "salesforce", name: "Salesforce",           type: "CRM",       icon: "\u2601\uFE0F", cat: "crm",       status: "connected", entities: "312K", quality: 87, syncAgo: 1 },
+  { id: "dynamics",   name: "MS Dynamics 365",      type: "CRM",       icon: "\u{1F536}", cat: "crm",       status: "connected", entities: "189K", quality: 82, syncAgo: 3 },
+  { id: "sap-crm",    name: "SAP CRM (Legacy)",     type: "CRM",       icon: "\u{1F4E6}", cat: "crm",       status: "syncing",   entities: "95K",  quality: 68, syncAgo: 7 },
+  { id: "oracle",     name: "Oracle ERP Cloud",     type: "ERP",       icon: "\u{1F534}", cat: "erp",       status: "connected", entities: "74K",  quality: 79, syncAgo: 5 },
+  { id: "infor",      name: "Infor CloudSuite",     type: "ERP",       icon: "\u2699\uFE0F", cat: "erp",       status: "connected", entities: "52K",  quality: 76, syncAgo: 4 },
+  { id: "legacy",     name: "Legacy ERP (AS/400)",  type: "ERP",       icon: "\u{1F5A5}\uFE0F", cat: "erp",       status: "syncing",   entities: "31K",  quality: 54, syncAgo: 12 },
+  { id: "hubspot",    name: "HubSpot",              type: "Marketing", icon: "\u{1F7E0}", cat: "marketing", status: "connected", entities: "18K",  quality: 93, syncAgo: 1 },
+  { id: "mykuka",     name: "myKUKA Portal",        type: "Portal",    icon: "\u{1F916}", cat: "portal",    status: "connected", entities: "8.4K", quality: 96, syncAgo: 2 }
+];
+
+// ───────────────────────────────────────────────────────────
+// Integration Layer — Hub-and-spoke diagram
+// ───────────────────────────────────────────────────────────
+function renderHubDiagram() {
+  const container = document.getElementById("hubDiagram");
+  const svgEl = document.getElementById("hubLines");
+  if (!container || !svgEl) return;
+
+  container.querySelectorAll(".spoke-node").forEach(n => n.remove());
+
+  const rect = container.getBoundingClientRect();
+  const cx = rect.width / 2;
+  const cy = rect.height / 2;
+  const radius = Math.min(cx, cy) * 0.72;
+  const nodeSize = 55;
+
+  svgEl.setAttribute("viewBox", `0 0 ${rect.width} ${rect.height}`);
+  svgEl.innerHTML = "";
+
+  const defs = document.createElementNS("http://www.w3.org/2000/svg", "defs");
+  svgEl.appendChild(defs);
+
+  INT_SYSTEMS.forEach((sys, i) => {
+    const angle = (2 * Math.PI * i / INT_SYSTEMS.length) - Math.PI / 2;
+    const nx = cx + radius * Math.cos(angle);
+    const ny = cy + radius * Math.sin(angle);
+
+    const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+    line.setAttribute("x1", cx); line.setAttribute("y1", cy);
+    line.setAttribute("x2", nx); line.setAttribute("y2", ny);
+    line.setAttribute("stroke", sys.status === "syncing" ? "#d97706" : "#cbd5e1");
+    line.setAttribute("stroke-width", "1.5");
+    line.setAttribute("stroke-dasharray", "6 4");
+    svgEl.appendChild(line);
+
+    const pathId = `path-${sys.id}`;
+    const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    path.setAttribute("id", pathId);
+    path.setAttribute("d", `M${cx},${cy} L${nx},${ny}`);
+    path.setAttribute("fill", "none");
+    defs.appendChild(path);
+
+    const dot1 = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+    dot1.setAttribute("r", "3.5"); dot1.setAttribute("fill", "#f25c19"); dot1.setAttribute("opacity", "0.8");
+    const am1 = document.createElementNS("http://www.w3.org/2000/svg", "animateMotion");
+    am1.setAttribute("dur", `${1.8 + i * 0.3}s`); am1.setAttribute("repeatCount", "indefinite");
+    const mp1 = document.createElementNS("http://www.w3.org/2000/svg", "mpath");
+    mp1.setAttributeNS("http://www.w3.org/1999/xlink", "href", `#${pathId}`);
+    am1.appendChild(mp1); dot1.appendChild(am1); svgEl.appendChild(dot1);
+
+    const dot2 = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+    dot2.setAttribute("r", "2.5");
+    dot2.setAttribute("fill", sys.status === "syncing" ? "#d97706" : "#16a34a");
+    dot2.setAttribute("opacity", "0.6");
+    const am2 = document.createElementNS("http://www.w3.org/2000/svg", "animateMotion");
+    am2.setAttribute("dur", `${2.2 + i * 0.25}s`); am2.setAttribute("repeatCount", "indefinite");
+    am2.setAttribute("keyPoints", "1;0"); am2.setAttribute("keyTimes", "0;1"); am2.setAttribute("calcMode", "linear");
+    const mp2 = document.createElementNS("http://www.w3.org/2000/svg", "mpath");
+    mp2.setAttributeNS("http://www.w3.org/1999/xlink", "href", `#${pathId}`);
+    am2.appendChild(mp2); dot2.appendChild(am2); svgEl.appendChild(dot2);
+
+    const node = document.createElement("div");
+    node.className = "spoke-node";
+    node.style.left = `${nx - nodeSize}px`;
+    node.style.top = `${ny - nodeSize}px`;
+    node.innerHTML = `
+      <div class="sys-status ${sys.status}"></div>
+      <div class="sys-icon">${sys.icon}</div>
+      <div class="sys-name">${sys.name}</div>
+      <div class="sys-type">${sys.type}</div>
+    `;
+    container.appendChild(node);
+  });
+}
+
+// ───────────────────────────────────────────────────────────
+// Integration Layer — System status cards
+// ───────────────────────────────────────────────────────────
+function renderSysCards() {
+  const grid = document.getElementById("sysCardsGrid");
+  if (!grid) return;
+  grid.innerHTML = INT_SYSTEMS.map(sys => {
+    const qColor = sys.quality >= 85 ? "var(--green)" : sys.quality >= 70 ? "var(--amber)" : "var(--red)";
+    const dotClass = sys.status === "connected" ? "green" : "amber";
+    const statusLabel = sys.status === "connected" ? "Connected" : "Syncing";
+    return `
+      <div class="sys-card">
+        <div class="sys-card-header">
+          <div class="sys-card-icon ${sys.cat}">${sys.icon}</div>
+          <div>
+            <div class="sys-card-title">${sys.name}</div>
+            <div class="sys-card-type">${sys.type}</div>
+          </div>
+          <div class="sys-card-status-badge ${sys.status}">${statusLabel}</div>
+        </div>
+        <div class="sys-card-metrics">
+          <div class="sys-metric-row">
+            <span class="sys-metric-label">Entities</span>
+            <span class="sys-metric-value">${sys.entities}</span>
+          </div>
+          <div class="sys-metric-row">
+            <span class="sys-metric-label">Data Quality</span>
+            <span class="sys-metric-value" style="color:${qColor}">${sys.quality}%</span>
+          </div>
+          <div class="sys-quality-bar">
+            <div class="sys-quality-fill" style="width:${sys.quality}%;background:${qColor}"></div>
+          </div>
+        </div>
+        <div class="sys-card-footer">
+          <span class="sys-card-sync"><span class="sync-dot ${dotClass}"></span>${sys.syncAgo} min ago</span>
+        </div>
+      </div>
+    `;
+  }).join("");
+}
+
+// ───────────────────────────────────────────────────────────
+// Integration Layer — Navigation
+// ───────────────────────────────────────────────────────────
+let _lastLeadScreen = "screenInput";
+
+const _origShowScreen = showScreen;
+showScreen = function(id) {
+  if (id !== "screenIntegration") _lastLeadScreen = id;
+  _origShowScreen(id);
+};
+
+document.querySelectorAll(".header-nav-tab").forEach(tab => {
+  tab.addEventListener("click", () => {
+    document.querySelectorAll(".header-nav-tab").forEach(t => t.classList.remove("active"));
+    tab.classList.add("active");
+    if (tab.dataset.screen === "integration") {
+      document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
+      document.getElementById("screenIntegration").classList.add("active");
+      document.getElementById("headerBack").style.display = "none";
+      renderHubDiagram();
+      renderSysCards();
+    } else {
+      document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
+      document.getElementById(_lastLeadScreen).classList.add("active");
+      if (_lastLeadScreen === "screenDetail") {
+        document.getElementById("headerBack").style.display = "block";
+      }
+    }
+    window.scrollTo(0, 0);
+  });
+});
+
+let _hubResizeTimer;
+window.addEventListener("resize", () => {
+  clearTimeout(_hubResizeTimer);
+  _hubResizeTimer = setTimeout(() => {
+    if (document.getElementById("screenIntegration").classList.contains("active")) {
+      renderHubDiagram();
+    }
+  }, 200);
+});
+
+setInterval(() => {
+  const el = document.getElementById("lastSyncGlobal");
+  if (!el) return;
+  const cur = parseInt(el.textContent) || 4;
+  el.textContent = (cur >= 12 ? 1 : cur + 1) + " min ago";
+}, 30000);
+
+// Init
+initFilters();
+</script>
+
+</body>
+</html>
