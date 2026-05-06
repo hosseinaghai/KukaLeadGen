@@ -593,6 +593,7 @@ header {
     <button class="header-nav-tab" data-screen="integration">Integration Layer</button>
   </div>
   <div class="header-spacer"></div>
+  <div class="header-back" id="headerHome" style="display:none">&larr; Back to start</div>
   <div class="header-back" id="headerBack" style="display:none">&larr; Back to pipeline</div>
 </header>
 
@@ -601,55 +602,55 @@ header {
   <!-- ─────────────────── Screen 0: Inputs ─────────────────── -->
   <section id="screenInput" class="screen active">
     <h2 class="input-title">Run the Lead-Gen Agent</h2>
-    <p class="input-subtitle">The agent reads public data on prospect manufacturers, anchors them against KUKA's existing customer book, and writes a prioritised list plus per-prospect cold-call cheat sheets.</p>
+    <p class="input-subtitle">The agent scans the industrial automation market for high-potential prospects, scores them against KUKA&rsquo;s ideal customer profile, and generates per-prospect cold-call cheat sheets with the right person to call and the right hook to use.</p>
 
     <div class="input-grid">
       <div class="input-card">
-        <div class="icon ic-orange">F</div>
+        <div class="icon ic-orange">&#9881;</div>
         <div class="body">
-          <h3>Public financials</h3>
-          <p>Creditreform / Bundesanzeiger extracts &mdash; revenue, EBIT, headcount trends, ownership, sector code</p>
-          <div class="meta">16 prospects loaded</div>
+          <h3>Industrial market research</h3>
+          <p>Manufacturing sector intelligence &mdash; revenue, headcount, CAPEX signals, PE ownership, automation maturity, and robot install base across automotive, aerospace, electronics, pharma, and material handling</p>
+          <div class="meta">16 prospects across US &amp; Germany</div>
         </div>
       </div>
       <div class="input-card">
-        <div class="icon ic-purple">L</div>
+        <div class="icon ic-purple">&#9733;</div>
         <div class="body">
-          <h3>LinkedIn stakeholders</h3>
-          <p>LinkedIn Sales Navigator enrichment &mdash; named employees with title and seniority</p>
-          <div class="meta">38 stakeholder profiles</div>
+          <h3>Stakeholder &amp; leadership intelligence</h3>
+          <p>Decision-maker mapping &mdash; CEOs, VPs of Manufacturing/Operations, Plant Directors, and PE operating partners with verified titles and contact channels</p>
+          <div class="meta">48+ stakeholder profiles enriched</div>
         </div>
       </div>
       <div class="input-card">
-        <div class="icon ic-green">W</div>
+        <div class="icon ic-green">&#9889;</div>
         <div class="body">
-          <h3>Website &amp; media snapshots</h3>
-          <p>Company websites, press releases, hiring announcements, leadership changes</p>
-          <div class="meta">10 snapshots loaded</div>
+          <h3>Trigger event monitoring</h3>
+          <p>New leadership hires, PE acquisitions, plant expansions, contract wins, automation mandates, and workforce challenges that signal buying intent</p>
+          <div class="meta">60+ trigger events tracked</div>
         </div>
       </div>
       <div class="input-card">
-        <div class="icon ic-amber">H</div>
+        <div class="icon ic-amber">&#9878;</div>
         <div class="body">
-          <h3>Contact details</h3>
-          <p>Creditreform &amp; company contact pages &mdash; phone, email, postal address</p>
-          <div class="meta">10 contact files</div>
+          <h3>KUKA ecosystem &amp; partner data</h3>
+          <p>System Partner relationships, existing KUKA robot installations, integration capabilities, and robot brand preferences across prospect facilities</p>
+          <div class="meta">Active partner &amp; install base data</div>
         </div>
       </div>
       <div class="input-card">
         <div class="icon ic-navy">K</div>
         <div class="body">
           <h3>KUKA customer anchors</h3>
-          <p>6 existing customer profiles for look-alike modelling: Schneider Pr&auml;zisionsteile, Novara Technologies, Hartmann Metallbau, Bayer Pharma-Pack, and more</p>
-          <div class="meta">6 customer anchors</div>
+          <p>Existing customer profiles for look-alike modelling &mdash; matching prospects to proven success stories by industry, size, ownership, and automation journey</p>
+          <div class="meta">6 customer anchors + US peer comparisons</div>
         </div>
       </div>
       <div class="input-card">
-        <div class="icon ic-red">R</div>
+        <div class="icon ic-red">&#9878;</div>
         <div class="body">
           <h3>ICP &amp; scoring rubric</h3>
-          <p>7-factor weighted rubric (financial, headcount, industry, look-alike, stakeholder, contact, triggers)</p>
-          <div class="meta">Published rubric</div>
+          <p>7-factor weighted rubric: financial fit, headcount, industry automation-intensity, look-alike score, stakeholder identifiability, contact completeness, trigger events</p>
+          <div class="meta">Published rubric &mdash; reproducible scoring</div>
         </div>
       </div>
     </div>
@@ -663,8 +664,8 @@ header {
   <section id="screenPipeline" class="screen">
     <div class="summary-banner">
       <div class="summary-left">
-        <h2>Prospect pipeline &mdash; 10 manufacturers analysed</h2>
-        <p>Run completed in 1.8 seconds &middot; rubric: <code>icp-and-scoring-rubric.md</code></p>
+        <h2>Prospect pipeline &mdash; 16 industrial prospects analysed</h2>
+        <p>Run completed in 2.4 seconds &middot; rubric: <code>icp-and-scoring-rubric.md</code> &middot; US &amp; Germany</p>
       </div>
       <div class="summary-stats">
         <div class="stat"><div class="stat-value high" id="statHigh">7</div><div class="stat-label">High priority</div></div>
@@ -678,7 +679,7 @@ header {
 
       <div class="top-action">
         <div class="pulse"></div>
-        <div class="copy"><strong>Top 2 to call this week:</strong> Bavaria Motors GmbH (Dr. Martin Kurz, VP Production &mdash; just joined from ZF with BMW contract requiring new production line) and S&uuml;ddeutsche Elektronik Montage GmbH (Yuki Tanaka, VP Operations &mdash; ex-Foxconn with explicit automation mandate and &euro;5M Industry 4.0 budget).</div>
+        <div class="copy"><strong>Top 2 to call this week:</strong> Convergix Automation Solutions (Scott Anair, CEO &mdash; ex-JR Automation President, appointed Jun 2025, KUKA System Partner at $250M scale) and DURA|Shiloh (Kimberly Rodriguez, CEO &mdash; 38 facilities, already running KUKA robots at Castle Bromwich, new EV plant in Muscle Shoals).</div>
       </div>
 
       <div class="pipeline-toolbar">
@@ -773,11 +774,11 @@ header {
 <div class="overlay" id="overlay">
   <div class="proc-card">
     <div class="proc-title">Lead-gen agent running...</div>
-    <div class="step" id="s1"><div class="step-icon"><div class="step-circle"></div></div><div class="step-text">Reading 16 prospect data packets</div></div>
-    <div class="step" id="s2"><div class="step-icon"><div class="step-circle"></div></div><div class="step-text">Loading 6 customer anchor profiles</div></div>
-    <div class="step" id="s3"><div class="step-icon"><div class="step-circle"></div></div><div class="step-text">Scoring prospects on 7-factor rubric</div></div>
-    <div class="step" id="s4"><div class="step-icon"><div class="step-circle"></div></div><div class="step-text">Identifying decision-maker per prospect</div></div>
-    <div class="step" id="s5"><div class="step-icon"><div class="step-circle"></div></div><div class="step-text">Drafting per-prospect cheat sheets</div></div>
+    <div class="step" id="s1"><div class="step-icon"><div class="step-circle"></div></div><div class="step-text">Scanning 16 industrial automation prospects (US &amp; Germany)</div></div>
+    <div class="step" id="s2"><div class="step-icon"><div class="step-circle"></div></div><div class="step-text">Matching against KUKA customer anchors &amp; partner ecosystem</div></div>
+    <div class="step" id="s3"><div class="step-icon"><div class="step-circle"></div></div><div class="step-text">Scoring on 7-factor ICP rubric with trigger event analysis</div></div>
+    <div class="step" id="s4"><div class="step-icon"><div class="step-circle"></div></div><div class="step-text">Mapping decision-makers: CEOs, VPs Manufacturing, PE partners</div></div>
+    <div class="step" id="s5"><div class="step-icon"><div class="step-circle"></div></div><div class="step-text">Generating cold-call cheat sheets with KUKA proof points</div></div>
   </div>
 </div>
 
@@ -1803,10 +1804,12 @@ function showScreen(id) {
   document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
   document.getElementById(id).classList.add("active");
   document.getElementById("headerBack").style.display = (id === "screenDetail") ? "block" : "none";
+  document.getElementById("headerHome").style.display = (id === "screenPipeline") ? "block" : "none";
   window.scrollTo(0, 0);
 }
 
 document.getElementById("headerBack").addEventListener("click", () => showScreen("screenPipeline"));
+document.getElementById("headerHome").addEventListener("click", () => showScreen("screenInput"));
 
 // ───────────────────────────────────────────────────────────
 // Pipeline rendering
@@ -2279,6 +2282,7 @@ document.querySelectorAll(".header-nav-tab").forEach(tab => {
       document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
       document.getElementById("screenIntegration").classList.add("active");
       document.getElementById("headerBack").style.display = "none";
+      document.getElementById("headerHome").style.display = "none";
       renderHubDiagram();
       renderSysCards();
     } else {
