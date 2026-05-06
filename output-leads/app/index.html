@@ -609,7 +609,7 @@ header {
         <div class="body">
           <h3>Public financials</h3>
           <p>Creditreform / Bundesanzeiger extracts &mdash; revenue, EBIT, headcount trends, ownership, sector code</p>
-          <div class="meta">10 prospects loaded</div>
+          <div class="meta">16 prospects loaded</div>
         </div>
       </div>
       <div class="input-card">
@@ -698,6 +698,9 @@ header {
         <select id="filterIndustry" class="filter-select">
           <option value="all">All industries</option>
         </select>
+        <select id="filterGeo" class="filter-select">
+          <option value="all">All geographies</option>
+        </select>
         <div class="toolbar-spacer"></div>
         <span id="filterCount" style="font-size:.82rem;color:var(--g500)"></span>
       </div>
@@ -708,6 +711,7 @@ header {
             <th data-sort="rank" class="sorted asc">#</th>
             <th data-sort="company">Company</th>
             <th data-sort="industry">Industry</th>
+            <th data-sort="geo">Geo</th>
             <th data-sort="headcount">HC</th>
             <th data-sort="score">Score</th>
             <th data-sort="priority">Priority</th>
@@ -769,7 +773,7 @@ header {
 <div class="overlay" id="overlay">
   <div class="proc-card">
     <div class="proc-title">Lead-gen agent running...</div>
-    <div class="step" id="s1"><div class="step-icon"><div class="step-circle"></div></div><div class="step-text">Reading 10 prospect data packets</div></div>
+    <div class="step" id="s1"><div class="step-icon"><div class="step-circle"></div></div><div class="step-text">Reading 16 prospect data packets</div></div>
     <div class="step" id="s2"><div class="step-icon"><div class="step-circle"></div></div><div class="step-text">Loading 6 customer anchor profiles</div></div>
     <div class="step" id="s3"><div class="step-icon"><div class="step-circle"></div></div><div class="step-text">Scoring prospects on 7-factor rubric</div></div>
     <div class="step" id="s4"><div class="step-icon"><div class="step-circle"></div></div><div class="step-text">Identifying decision-maker per prospect</div></div>
@@ -783,10 +787,383 @@ header {
 // ───────────────────────────────────────────────────────────
 const PROSPECTS = [
   {
+    id: "13-convergix-automation",
+    company: "Convergix Automation Solutions",
+    industry: "Automation integration (system partner)",
+    region: "Michigan (Auburn Hills)", geo: "United States",
+    headcount: 900, sizeBand: "large",
+    revenue_meur: 230, ebit_margin_pct: 8.0,
+    growth: "Growing (acquisition-driven)", ownership: "PE-backed (Crestview Partners)",
+    score: 85, priority: "High",
+    factors: {
+      financial_fit: { score: 5, just: "~$250M pro forma revenue (\u2248\u20ac230M) after Eagle Technologies acquisition. PE-backed growth through M&A signals strong investment appetite." },
+      headcount_fit: { score: 3, just: "~900 employees across 25 global locations \u2014 large platform, but individual locations are mid-size." },
+      industry: { score: 5, just: "Integrates 6-axis robotics from KUKA, Fanuc, ABB, and Yaskawa into turnkey automation systems. KUKA\u2019s system-partner search surfaces Convergix directly." },
+      look_alike: { score: 5, anchor: "Invio Automation", sim: 88, just: "Both are PE-backed U.S. automation integrators with KUKA partnerships, acquisition-driven growth, and multi-site operations. Convergix is larger (900 vs 600 FTE) with more acquisitions.", attrs: ["PE-backed integrator", "KUKA partner", "Acquisition-driven", "Multi-site U.S."] },
+      stakeholder: { score: 5, just: "CEO Scott Anair (appointed Jun 2025; ex-JR Automation President, ex-Wauseon Machine CEO). Co-CEO Kirk Benson (ex-Crestview Partners). Executive Chairman Mike DuBose (ex-JR Automation)." },
+      contact: { score: 4, just: "Corporate HQ Auburn Hills, MI. Phone and web contact available. Leadership names confirmed via PR Newswire press releases (Jun 2025)." },
+      triggers: { score: 5, just: "New CEO Scott Anair appointed Jun 2025 \u2014 ex-JR Automation President brings deep automation industry relationships. Eagle Technologies acquisition Apr 2023 added ~300 FTE. 5 acquisitions total since Crestview\u2019s investment." }
+    },
+    stakeholder: {
+      name: "Scott Anair", title: "Chief Executive Officer",
+      email: "info@convergixautomation.com", phone: "+1 586 469 3900",
+      rule: "KUKA System Partner with PE backing and new CEO: CEO is primary for strategic partnership expansion. Ex-JR Automation President \u2014 deeply familiar with robot OEM partnerships.",
+      alternates: [
+        { name: "Kirk Benson", title: "Co-CEO", reason: "Previously at Crestview Partners on industrial technology investments; bridges PE and operations." },
+        { name: "Mike DuBose", title: "Executive Chairman", reason: "Ex-JR Automation Executive Chairman; deep automation industry relationships and KUKA familiarity." }
+      ]
+    },
+    deal_keur: 750,
+    triggers: [
+      "New CEO Scott Anair appointed Jun 2025 \u2014 ex-President of JR Automation, ex-CEO of Wauseon Machine; deeply familiar with robot OEM partnerships",
+      "5 acquisitions completed: JMP Solutions (2021), Classic Design (2022), AGR Automation (2022), Eagle Technologies (2023) \u2014 rapid platform build",
+      "25 global locations with ~900 employees \u2014 scaling KUKA expertise across all sites drives pull-through demand",
+      "Executive Chairman Mike DuBose also ex-JR Automation \u2014 leadership team has deep KUKA ecosystem familiarity",
+      "Serves EV/battery, life sciences, aerospace, automotive \u2014 all high-growth KUKA application segments"
+    ],
+    cheat: {
+      best_time: "Tuesday or Wednesday morning, 09:00 EST",
+      opening: "Scott, congratulations on the CEO role at Convergix. With your JR Automation background, you know the value of deep robot OEM partnerships. Convergix already integrates KUKA across your 25 locations \u2014 at $250M revenue and after 5 acquisitions, you\u2019ve reached a scale where a strategic partnership upgrade makes sense: preferred pricing tiers, co-development of standardised cells, and priority access to KUKA\u2019s new product roadmap. Worth 30 minutes?",
+      pains: [
+        "5 acquisitions mean 5 different teams with different robot brand preferences \u2014 standardisation is urgent",
+        "PE growth mandate requires margin improvement \u2014 preferred robot brand pricing directly impacts project margins",
+        "25 locations need consistent KUKA training and certification standards post-acquisition integration",
+        "EV/battery and life sciences customers demand turnkey KUKA-based cells \u2014 deeper partnership accelerates delivery"
+      ],
+      pillars: [
+        { p: "Robot systems & integration", t: "Strategic System Partner upgrade: volume-based KUKA pricing, co-development of standardised cells for EV battery, life sciences, and automotive. Early access to new KUKA products." },
+        { p: "Software & digital services", t: "Enterprise KUKA.Sim licensing across all 25 Convergix locations. Joint digital twin capabilities for customer proposals." },
+        { p: "Service, maintenance & training", t: "KUKA College Master certification programme across all locations. Certified trainers at each site to reduce onboarding time for acquired teams (especially Eagle Technologies engineers)." }
+      ],
+      proof: [
+        "Convergix already integrates KUKA robots \u2014 the relationship is proven. This is about scaling it to match Convergix\u2019s new $250M scale.",
+        "Invio Automation (similar PE-backed integrator) is also deepening its KUKA partnership \u2014 competitive motivation to move first.",
+        "KUKA\u2019s top-tier System Partners generate 2\u20133x the pull-through robot sales of standard partners."
+      ],
+      qa: [
+        { q: "We already work with KUKA \u2014 what\u2019s new?", a: "Scale. At $250M and 25 locations with a new CEO, you\u2019ve outgrown the standard partner tier. Top-tier partners get volume pricing, co-development, and priority support that meaningfully impact your margins." },
+        { q: "We integrate Fanuc, ABB, and Yaskawa too.", a: "Understood. Strategic partnership doesn\u2019t mean exclusivity \u2014 it means better economics and support for KUKA projects. Your JR Automation experience shows how preferred OEM partnerships drive profitability." },
+        { q: "Crestview wants to see the ROI.", a: "We\u2019ll build a joint business case showing the margin impact of preferred pricing, training efficiency, and pull-through sales. Happy to present directly to Crestview." }
+      ],
+      cta: "Scott, can I arrange a strategic partnership review meeting with KUKA\u2019s North America channel leadership? Given your JR Automation background, this will be a very efficient conversation."
+    }
+  },
+  {
+    id: "11-dura-automotive",
+    company: "DURA | Shiloh (DURA Automotive Systems)",
+    industry: "Automotive (glass, mechatronics & lightweighting)",
+    region: "Michigan (Auburn Hills)", geo: "United States",
+    headcount: 6400, sizeBand: "large",
+    revenue_meur: 1100, ebit_margin_pct: 5.5,
+    growth: "Transformation (PE-backed)", ownership: "PE-backed (MiddleGround Capital)",
+    score: 82, priority: "High",
+    factors: {
+      financial_fit: { score: 5, just: "Revenue $1.2B (\u2248\u20ac1.1B) across merged DURA|Shiloh entity, 38 facilities in 13 countries. PE ownership since 2020 signals active investment appetite." },
+      headcount_fit: { score: 3, just: "~6,400 FTE across 38 facilities worldwide \u2014 above typical KUKA SME sweet spot, but plant-level engagement (100\u2013300 FTE per site) fits well." },
+      industry: { score: 5, just: "Automotive glass processing, mechatronic systems, and lightweighting \u2014 core KUKA application domain. Castle Bromwich plant already runs two KUKA robots for adhesive application." },
+      look_alike: { score: 4, anchor: "HydraForce (Bosch Rexroth)", sim: 72, just: "Both are large U.S.-based precision manufacturers with multi-plant global operations and active investment in automation. HydraForce already runs robotic assembly; DURA already runs KUKA robots.", attrs: ["Multi-plant U.S.", "Precision manufacturing", "Existing robot user", "Active investment"] },
+      stakeholder: { score: 4, just: "CEO Kimberly Rodriguez. PE team: John Stewart (Managing Partner/CIO), Dinesh Vasandani (MD Operations), Taylor Hall (VP Operations). Board member Chris Charlton (The Charlton Group)." },
+      contact: { score: 4, just: "Corporate HQ Auburn Hills, MI. Main phone available. CEO and PE leadership names confirmed via MiddleGround Capital press releases and portfolio pages." },
+      triggers: { score: 5, just: "MiddleGround Capital acquisition 2020 with operational improvement mandate. Castle Bromwich plant running KUKA robots for adhesive application. New EV battery enclosure plant in Muscle Shoals, Alabama. Plant closures (Goshen, Kalamazoo) signal consolidation and automation investment in remaining facilities." }
+    },
+    stakeholder: {
+      name: "Kimberly Rodriguez", title: "Chief Executive Officer",
+      email: "info@durashiloh.com", phone: "+1 248 299 7600",
+      rule: "Large PE-backed multi-plant: CEO is primary for fleet-wide automation strategy. Plant engineering directors for facility-level engagement.",
+      alternates: [
+        { name: "Dinesh Vasandani", title: "Managing Director, Operations (MiddleGround)", reason: "MiddleGround\u2019s operational improvement lead for DURA; drives CAPEX allocation and automation agenda." },
+        { name: "Taylor Hall", title: "VP Operations (MiddleGround)", reason: "PE operations team member focused on manufacturing improvement across the portfolio." }
+      ]
+    },
+    deal_keur: 850,
+    triggers: [
+      "MiddleGround Capital acquired DURA in 2020 with explicit operational improvement mandate \u2014 CEO Kimberly Rodriguez leading transformation",
+      "Castle Bromwich plant already running two KUKA robots for adhesive application in glass processing",
+      "New state-of-the-art EV battery enclosure manufacturing plant in Muscle Shoals, Alabama \u2014 greenfield automation opportunity",
+      "Plant closures in Goshen, IN and Kalamazoo, MI (2026) \u2014 consolidation drives automation investment in remaining 38 facilities",
+      "38 facilities in 13 countries \u2014 proven KUKA cell at one plant creates multi-site rollout opportunity"
+    ],
+    cheat: {
+      best_time: "Tuesday or Wednesday morning, 09:00 EST",
+      opening: "Kimberly, DURA|Shiloh already runs KUKA robots in the Castle Bromwich glass processing cell, and with the new Muscle Shoals EV battery enclosure plant coming online, there\u2019s a greenfield opportunity to build KUKA into the automation standard from day one. We\u2019ve helped PE-backed automotive suppliers roll out proven cells across 10+ plants in under 18 months. Worth 30 minutes to discuss a multi-site roadmap with Dinesh?",
+      pains: [
+        "PE mandate for operational improvement across 38 facilities \u2014 automation is the primary lever as plants consolidate",
+        "Proven KUKA cell exists at Castle Bromwich but no systematic multi-site rollout plan yet",
+        "New Muscle Shoals EV plant needs automation from day one \u2014 greenfield opportunity that won\u2019t repeat",
+        "Plant closures mean production must be absorbed by remaining facilities \u2014 automation fills the capacity gap"
+      ],
+      pillars: [
+        { p: "Robot systems & integration", t: "Scale proven KUKA adhesive application cells across glass processing plants. KR QUANTEC for the Muscle Shoals EV battery enclosure line. KR CYBERTECH for mechatronics assembly." },
+        { p: "Software & digital services", t: "KUKA.Sim for standardised cell design across facilities \u2014 validate once, deploy many. smartPRODUCTION for multi-plant OEE benchmarking to support MiddleGround\u2019s reporting." },
+        { p: "Service, maintenance & training", t: "KUKA Care fleet contract across multiple facilities. KUKA College certification for plant-level maintenance teams at each site." }
+      ],
+      proof: [
+        "DURA\u2019s own Castle Bromwich plant \u2014 already running two KUKA robots for adhesive application. The proof point is internal.",
+        "HydraForce (Bosch Rexroth) \u2014 similar multi-plant manufacturer scaling robotic assembly across 9 global facilities."
+      ],
+      qa: [
+        { q: "We have 38 plants \u2014 how do you scale?", a: "KUKA has a multi-site deployment model: standardise the cell design with KUKA.Sim, train local teams via KUKA College, and roll out with regional System Partners. We\u2019ve done this with other automotive Tier 1s across 10+ plants." },
+        { q: "MiddleGround wants fast ROI.", a: "Your Castle Bromwich adhesive cell is already proving ROI \u2014 we document the economics, standardise the design, and replicate. The Muscle Shoals greenfield is the fastest ROI path." },
+        { q: "We\u2019re closing plants and restructuring.", a: "Consolidation is exactly when automation ROI peaks. The remaining plants need to absorb more volume with fewer people \u2014 that\u2019s the KUKA value proposition." }
+      ],
+      cta: "Can we arrange a meeting with Kimberly and Dinesh to document the Castle Bromwich cell\u2019s ROI and build the multi-site rollout business case? Especially for the Muscle Shoals greenfield."
+    }
+  },
+  {
+    id: "14-invio-automation",
+    company: "Invio Automation (formerly Eckhart)",
+    industry: "Automation integration (industrial)",
+    region: "Michigan (Lansing)", geo: "United States",
+    headcount: 600, sizeBand: "large",
+    revenue_meur: 150, ebit_margin_pct: 7.5,
+    growth: "Growing (acquisition-driven)", ownership: "PE-backed (Arsenal Capital Partners)",
+    score: 80, priority: "High",
+    factors: {
+      financial_fit: { score: 4, just: "Revenue not reliably disclosed; estimated \u20ac150M+ based on scale (600 FTE, 10 facilities, multiple acquisitions). Arsenal Capital PE backing since 2022." },
+      headcount_fit: { score: 3, just: "600 team members across 10 facilities in North America. Individual sites are mid-size." },
+      industry: { score: 5, just: "KUKA System Partner \u2014 Invio lists itself as a KUKA System Partner on its website. KUKA described Eckhart automation cells featuring KUKA robots before the rebrand." },
+      look_alike: { score: 5, anchor: "Convergix Automation Solutions", sim: 88, just: "Both are PE-backed U.S. automation integrators with KUKA partnerships, acquisition-driven growth, and multi-site North American operations. Similar scale and trajectory.", attrs: ["PE-backed integrator", "KUKA System Partner", "Acquisition-driven", "Multi-site North America"] },
+      stakeholder: { score: 5, just: "CEO Achilli Sfizzo (appointed Nov 2024). CMO/Technologies President Kurt Covine (joined Feb 2025). Arsenal Capital portfolio oversight. 370+ customers served." },
+      contact: { score: 4, just: "Corporate HQ Lansing, MI. Phone and web contact available. CEO name confirmed via Invio website thought leadership page." },
+      triggers: { score: 5, just: "New CEO Achilli Sfizzo appointed Nov 2024. Acquired Calvary Robotics (Feb 2026) \u2014 Webster, NY-based, 30+ years in medical device, life sciences, and transportation automation. Now 600 team members across 10 facilities." }
+    },
+    stakeholder: {
+      name: "Achilli Sfizzo", title: "Chief Executive Officer",
+      email: "info@invioautomation.com", phone: "+1 517 381 9900",
+      rule: "KUKA System Partner with PE backing and new CEO: CEO is primary for strategic partnership expansion. New CEO (Nov 2024) will be setting vendor strategy.",
+      alternates: [
+        { name: "Kurt Covine", title: "CMO & Technologies Division President", reason: "Joined Feb 2025; owns technology strategy and sales across divisions. 15+ years management experience." },
+        { name: "Arsenal Capital Operating Partner", title: "PE Operating Partner", reason: "Drives platform growth strategy including technology partnerships and M&A." }
+      ]
+    },
+    deal_keur: 550,
+    triggers: [
+      "New CEO Achilli Sfizzo appointed Nov 2024 \u2014 will be setting strategic vendor partnerships in first 12 months",
+      "Acquired Calvary Robotics (Feb 2026) in Webster, NY \u2014 adds medical device, life sciences, and transportation automation expertise",
+      "Now 600 team members serving 370+ customers across 10 North American facilities",
+      "Kurt Covine joined as CMO & Technologies Division President (Feb 2025) \u2014 shaping go-to-market and technology partnerships",
+      "KUKA System Partner status confirmed on Invio website \u2014 deepening this relationship is a natural next step"
+    ],
+    cheat: {
+      best_time: "Tuesday or Wednesday morning, 09:00 EST",
+      opening: "Achilli, congratulations on the CEO role and the Calvary Robotics acquisition. Invio has been a KUKA System Partner since the Eckhart days, and with 600 team members across 10 facilities now, the platform has reached a scale where a deeper strategic partnership makes sense \u2014 preferred pricing, joint cell development, and co-marketing. Your competitor Convergix is scaling their KUKA relationship too. Worth 30 minutes to discuss?",
+      pains: [
+        "Calvary Robotics acquisition (Webster, NY) brings new teams in medical device and life sciences \u2014 different robot brand preferences need alignment",
+        "10 facilities across North America need consistent KUKA training and certification post-acquisition",
+        "Competitor Convergix (also PE-backed, also KUKA partner) is actively deepening their KUKA relationship \u2014 first-mover advantage matters",
+        "Arsenal Capital\u2019s growth mandate requires margin improvement \u2014 preferred KUKA pricing directly impacts project profitability"
+      ],
+      pillars: [
+        { p: "Robot systems & integration", t: "Strategic KUKA partnership upgrade: volume pricing, co-development of cells for medical device (via Calvary), life sciences, and industrial automation. Early access to LBR iisy and KR AGILUS cleanroom variants." },
+        { p: "Software & digital services", t: "Enterprise KUKA.Sim licensing for all 10 Invio facilities. Joint digital twin and simulation capabilities for customer proposals." },
+        { p: "Service, maintenance & training", t: "KUKA College Master programme across all Invio locations, including newly acquired Calvary Robotics teams in Webster, NY." }
+      ],
+      proof: [
+        "KUKA described Eckhart automation cells featuring KUKA robots \u2014 the partnership has a proven track record.",
+        "Convergix Automation (similar PE-backed integrator, $250M revenue) is scaling their KUKA partnership \u2014 competitive proof that deeper partnerships drive growth."
+      ],
+      qa: [
+        { q: "We just acquired Calvary \u2014 we\u2019re still integrating.", a: "New CEO + new acquisition = the perfect time to set robot brand strategy. Aligning Calvary\u2019s team on KUKA now avoids fragmentation and training duplication." },
+        { q: "Arsenal wants to see ROI before committing.", a: "We\u2019ll build a joint business case: preferred pricing impact, training efficiency gains, and projected pull-through robot sales across your 370+ customer base. Happy to present to Arsenal directly." },
+        { q: "Convergix is bigger \u2014 why would KUKA prioritise us?", a: "KUKA values the depth of the relationship, not just the size. Your KUKA System Partner status predates Convergix\u2019s scale. Early movers in partnership upgrades get the best terms." }
+      ],
+      cta: "Achilli, can I set up a strategic partnership discussion between KUKA North America and your executive team? Kurt\u2019s technology vision and the Calvary integration make this the right moment."
+    }
+  },
+  {
+    id: "12-shape-technologies",
+    company: "Shape Technologies Group / Shape Process Automation",
+    industry: "Automation integration (waterjet & robotics)",
+    region: "Washington (Kent) & Michigan (Auburn Hills)", geo: "United States",
+    headcount: 1350, sizeBand: "large",
+    revenue_meur: 430, ebit_margin_pct: 7.0,
+    growth: "Growing (PE-backed)", ownership: "PE-backed (Charlesbank, prev. AIP)",
+    score: 78, priority: "High",
+    factors: {
+      financial_fit: { score: 5, just: "Revenue $471M (\u2248\u20ac430M) disclosed by former owner AIP. Strong financial profile with PE backing from Charlesbank since 2024." },
+      headcount_fit: { score: 3, just: "1,300+ FTE across 8 manufacturing/software centers and 850K sq ft footprint \u2014 large but plant-level engagement fits." },
+      industry: { score: 4, just: "Automation integrator serving automotive, aerospace, and industrial sectors. Shape Process Automation explicitly integrates KUKA robots alongside Fanuc, ABB, and Motoman." },
+      look_alike: { score: 4, anchor: "Convergix Automation Solutions", sim: 75, just: "Both are PE-backed U.S. automation integrators that integrate KUKA robots. Shape is larger ($471M vs $250M) with a waterjet cutting focus alongside robotics.", attrs: ["PE-backed integrator", "KUKA-capable", "Multi-sector automation", "U.S. multi-site"] },
+      stakeholder: { score: 5, just: "CEO Nino LaDuca (since Mar 2023, ex-SPA President). COO Todd Campbell (since May 2024, 30+ yrs manufacturing, ex-Veeco/Applied Materials/Lockheed). SPA Global President Simon Kenworthy (since May 2024, 30+ yrs robotics expert)." },
+      contact: { score: 4, just: "Corporate HQ Kent, WA. SPA operations in Auburn Hills, MI. Phone and website available. All leadership names confirmed via Shape Technologies press releases." },
+      triggers: { score: 4, just: "Charlesbank investment 2024 signals growth capital. New COO Todd Campbell (May 2024) and SPA Global President Simon Kenworthy (May 2024) \u2014 both bringing operational and robotics expertise. 8 centers present fleet standardisation opportunity." }
+    },
+    stakeholder: {
+      name: "Simon Kenworthy", title: "Global President, Shape Process Automation",
+      email: "info@shapetechnologies.com", phone: "+1 253 854 5800",
+      rule: "Integrator/platform company: SPA Global President is the primary contact for robot brand decisions. 30+ years as a global expert in robotics, automation, and material cutting processes.",
+      alternates: [
+        { name: "Nino LaDuca", title: "President & CEO, Shape Technologies Group", reason: "Strategic sponsor for brand partnerships. Ex-SPA President with 25+ years industry experience." },
+        { name: "Todd Campbell", title: "Chief Operating Officer", reason: "Oversees operations, supply chain, and quality across all Shape locations. Ex-Veeco/Applied Materials/Lockheed." }
+      ]
+    },
+    deal_keur: 500,
+    triggers: [
+      "Charlesbank acquired Shape Technologies from AIP in 2024 \u2014 new PE ownership drives strategic vendor consolidation",
+      "Simon Kenworthy appointed SPA Global President (May 2024) \u2014 30+ years as a global expert in robotics and automation",
+      "Todd Campbell appointed COO (May 2024) \u2014 30+ years manufacturing experience from Veeco, Applied Materials, and Lockheed",
+      "Shape Process Automation explicitly integrates KUKA robots alongside Fanuc, ABB, and Motoman across 8 centers",
+      "850K sq ft footprint across 8 manufacturing/software centers \u2014 fleet standardisation opportunity"
+    ],
+    cheat: {
+      best_time: "Tuesday or Wednesday morning, 09:00 PST",
+      opening: "Simon, with your 30 years in robotics and automation, you know the value of deep OEM partnerships. Shape Process Automation already integrates KUKA robots, and with Charlesbank\u2019s investment, there\u2019s an opportunity to formalise that into a strategic partnership \u2014 preferred pricing, joint go-to-market, and KUKA College training that makes KUKA the default choice for new SPA projects. Worth 30 minutes with Nino?",
+      pains: [
+        "Multi-brand robot integration (Fanuc, ABB, KUKA, Motoman) adds complexity in training, spare parts, and programming across 8 centers",
+        "New PE ownership (Charlesbank) will push for vendor consolidation and margin improvement",
+        "Todd Campbell\u2019s operations mandate includes quality and standardisation \u2014 robot brand consolidation is a quick win",
+        "Customer demand for turnkey automation cells requires deep OEM expertise, not shallow multi-brand support"
+      ],
+      pillars: [
+        { p: "Robot systems & integration", t: "Strategic partnership: preferred KUKA pricing for SPA projects, joint cell development, KUKA System Partner certification for all 8 centers." },
+        { p: "Software & digital services", t: "KUKA.Sim enterprise licenses for SPA\u2019s engineering teams \u2014 standardise offline programming across all centers." },
+        { p: "Service, maintenance & training", t: "KUKA College certification for SPA\u2019s integration engineers globally. Build KUKA expertise as a competitive differentiator for SPA\u2019s customer pitches." }
+      ],
+      proof: [
+        "Shape Process Automation already integrates KUKA \u2014 the relationship exists; this conversation is about deepening it.",
+        "Convergix Automation ($250M, 25 locations) is actively upgrading their KUKA partnership \u2014 Shape should move in parallel.",
+        "KUKA System Partner programme provides preferred pricing, training, and go-to-market support."
+      ],
+      qa: [
+        { q: "We integrate all brands \u2014 why favour KUKA?", a: "Not asking you to drop other brands. A preferred partnership means better pricing, priority support, and joint marketing. With your robotics expertise, Simon, you know the margin difference between preferred and standard OEM pricing." },
+        { q: "Charlesbank just bought us \u2014 it\u2019s too early.", a: "Actually, the first 12 months of PE ownership is exactly when strategic vendor partnerships get locked in. Being proactive positions Shape favourably with Charlesbank." },
+        { q: "What does KUKA System Partner status get us?", a: "Preferred pricing, priority technical support, co-marketing, access to KUKA.Sim enterprise licenses, and KUKA College training packages for your engineers." }
+      ],
+      cta: "Simon, can I set up a strategic partnership discussion with KUKA\u2019s North America channel team, you, and Nino?"
+    }
+  },
+  {
+    id: "16-hydraforce",
+    company: "HydraForce (Bosch Rexroth Compact Hydraulics)",
+    industry: "Hydraulic valve & manifold manufacturing",
+    region: "Illinois (Lincolnshire)", geo: "United States",
+    headcount: 2100, sizeBand: "large",
+    revenue_meur: 400, ebit_margin_pct: 9.0,
+    growth: "Growing (Bosch Rexroth integration)", ownership: "Bosch Rexroth subsidiary (acquired Feb 2023)",
+    score: 74, priority: "High",
+    factors: {
+      financial_fit: { score: 4, just: "Revenue not publicly disclosed; estimated ~\u20ac400M based on 2,100 employees and Bosch Rexroth Compact Hydraulics BU scale (3,900 associates, 9 manufacturing sites globally)." },
+      headcount_fit: { score: 3, just: "~2,100 employees across global operations \u2014 above typical KUKA SME sweet spot, but individual plants (Lincolnshire, Birmingham UK, Changzhou China) are in the 200\u2013500 FTE range." },
+      industry: { score: 5, just: "Hydraulic valve and manifold manufacturing \u2014 precision assembly with 100% inline testing. Already uses robotic assembly in valve production cells. Core KUKA application domain." },
+      look_alike: { score: 3, anchor: "DURA | Shiloh", sim: 65, just: "Both are large U.S.-based multi-plant precision manufacturers with active investment in automation. DURA already runs KUKA robots; HydraForce already runs robotic assembly cells.", attrs: ["Multi-plant U.S.", "Precision manufacturing", "Existing robot user", "Active investment"] },
+      stakeholder: { score: 5, just: "BU Lead Matthias Goebel (appointed Jan 2026). SVP Manufacturing Uwe Czychy (Jan 2026). HydraForce CEO Mike Terzich (since 2020, ex-Zebra Technologies 28 yrs). VP Operations Tim Twitty." },
+      contact: { score: 4, just: "Corporate HQ at 500 Barclay Blvd, Lincolnshire IL 60069. Main phone +1 847 793 2300. Leadership names confirmed via Fluid Power World press releases (Jan 2026)." },
+      triggers: { score: 5, just: "New BU leadership team appointed Jan 2026: Matthias Goebel (BU Lead) + Uwe Czychy (SVP Manufacturing) with explicit \u2018quality, standardisation and production flow\u2019 mandate. Bosch Rexroth deepening investment in U.S. operations. New production lines for Italian brand products." }
+    },
+    stakeholder: {
+      name: "Uwe Czychy", title: "SVP Manufacturing, Compact Hydraulics BU",
+      email: "info@hydraforce.com", phone: "+1 847 793 2300",
+      rule: "Large subsidiary with new manufacturing leadership: SVP Manufacturing (appointed Jan 2026) is primary for automation investment decisions. BU Lead (Goebel) for strategic/fleet-wide approvals.",
+      alternates: [
+        { name: "Matthias Goebel", title: "SVP / BU Lead, Compact Hydraulics", reason: "Heads the entire Compact Hydraulics BU since Jan 2026; strategic sponsor for manufacturing transformation across 9 sites." },
+        { name: "Mike Terzich", title: "CEO & President (HydraForce)", reason: "HydraForce CEO since 2020; ex-Zebra Technologies (28 years). Final U.S. operations decision-maker." },
+        { name: "Tim Twitty", title: "VP Operations (HydraForce)", reason: "Runs day-to-day operations at the Lincolnshire facility; direct buyer for plant-level automation." }
+      ]
+    },
+    deal_keur: 800,
+    triggers: [
+      "New Compact Hydraulics BU leadership Jan 2026 \u2014 Matthias Goebel (BU Lead) + Uwe Czychy (SVP Manufacturing) with explicit standardisation mandate",
+      "Bosch Rexroth deepening investment in HydraForce\u2019s U.S. operations \u2014 new production lines being set up for Italian brand products",
+      "Focus on \u2018quality, standardisation and production flow\u2019 across 9 global manufacturing sites",
+      "Already uses robotic assembly and 100% automated testing in valve production cells \u2014 expansion opportunity",
+      "$150K donation to fund industrial robots for Wheeling High School \u2014 demonstrates automation culture"
+    ],
+    cheat: {
+      best_time: "Tuesday or Wednesday morning, 09:00 CST",
+      opening: "Uwe, congratulations on the SVP Manufacturing role. I read about Bosch Rexroth\u2019s deepened investment in U.S. operations and the focus on standardisation and production flow. You already run robotic assembly in your valve production cells \u2014 we\u2019d like to discuss scaling that with KUKA across all 9 manufacturing sites. Same German industrial DNA, and KUKA has a multi-site deployment model built for exactly this kind of standardisation programme. Worth 30 minutes?",
+      pains: [
+        "New BU leadership has a manufacturing standardisation mandate across 9 global sites \u2014 current automation is fragmented",
+        "Setting up new U.S. production lines for Italian brand products \u2014 greenfield automation opportunity",
+        "100% inline testing requirement across all valve production \u2014 automated assembly and testing needs to scale with volumes",
+        "Integration of legacy HydraForce processes with Bosch Rexroth standards requires technology investment",
+        "Precision valve assembly demands consistent quality \u2014 manual processes create variability at scale"
+      ],
+      pillars: [
+        { p: "Robot systems & integration", t: "KR AGILUS and LBR iisy for precision valve assembly and inline testing cells. KR CYBERTECH for manifold handling and machining. Standardised cell designs deployable across all 9 sites." },
+        { p: "Software & digital services", t: "KUKA.Sim for offline programming and standardised cell design \u2014 validate once, deploy across Lincolnshire, Birmingham, Changzhou and all other sites. smartPRODUCTION for multi-site OEE benchmarking." },
+        { p: "Service, maintenance & training", t: "KUKA Care fleet contract across multiple global facilities. KUKA College certification for maintenance teams at each site \u2014 consistent competency worldwide." }
+      ],
+      proof: [
+        "HydraForce already runs robotic assembly in valve production cells \u2014 the automation culture exists; this is about scaling and standardising.",
+        "DURA|Shiloh \u2014 similar multi-plant U.S. manufacturer already using KUKA robots, proving the brand works for large-scale industrial operations.",
+        "KUKA and Bosch Rexroth share German industrial heritage \u2014 natural cultural and technical alignment."
+      ],
+      qa: [
+        { q: "We already have robots in our assembly cells.", a: "Exactly \u2014 you\u2019ve proven the concept. The question is: are those cells standardised across all 9 sites? KUKA\u2019s approach is design once with KUKA.Sim, deploy many." },
+        { q: "Bosch Rexroth has its own automation preferences.", a: "KUKA has a long-standing relationship with Bosch across multiple divisions. Our KR C5 controller integrates with all Bosch Rexroth drive and control systems." },
+        { q: "We\u2019re still integrating HydraForce into Bosch Rexroth.", a: "Integration is the perfect time to set automation standards. Choosing a robot platform now means the new Italian product lines launch on the right technology from day one." },
+        { q: "Our valve assembly requires very high precision.", a: "KR AGILUS has \u00b10.02mm repeatability. LBR iisy adds collaborative flexibility for test stations. Both are proven in hydraulic component manufacturing." }
+      ],
+      cta: "Can I arrange a meeting with your Lincolnshire plant engineering team to audit the existing robotic assembly cells and scope a multi-site standardisation roadmap? Happy to include Matthias for the strategic discussion."
+    }
+  },
+  {
+    id: "15-adaptec-solutions",
+    company: "Adaptec Solutions",
+    industry: "Material handling / automation integration",
+    region: "New York (Rochester)", geo: "United States",
+    headcount: 250, sizeBand: "mid",
+    revenue_meur: 140, ebit_margin_pct: 6.0,
+    growth: "Growing (acquisition-driven)", ownership: "PE-backed (Wincove Private Holdings)",
+    score: 65, priority: "Medium",
+    factors: {
+      financial_fit: { score: 4, just: "Eclipsed $100M revenue milestone in 2022 (\u2248\u20ac140M estimated current). PE-backed by Wincove Private Holdings since 2016." },
+      headcount_fit: { score: 4, just: "200\u2013500 employees across 4 U.S. locations \u2014 fits mid-size sweet spot for KUKA engagement." },
+      industry: { score: 3, just: "Material handling and automation integration. References KUKA robots in public materials but no confirmed KUKA System Partner status." },
+      look_alike: { score: 3, anchor: "Invio Automation", sim: 58, just: "Both are PE-backed U.S. automation integrators with acquisition-driven growth. Invio is larger and has confirmed KUKA partnership; Adaptec has weaker KUKA evidence but similar trajectory.", attrs: ["PE-backed integrator", "Acquisition-driven", "U.S. multi-location", "References KUKA"] },
+      stakeholder: { score: 5, just: "CEO Octavio Diaz (24 yrs leading manufacturing/tech companies, ex-CFO of PE-backed companies, ex-President of Finance at global water treatment co). Rebranded from Aloi/ACE/Mainstream to unified Adaptec brand." },
+      contact: { score: 4, just: "HQ: 140 Commerce Drive, Rochester NY 14623. Offices also in Lexington NC, Painted Post NY, Memphis TN. Contact via website and main phone." },
+      triggers: { score: 4, just: "CEO Octavio Diaz leading unified Adaptec platform. Rebranded from three legacy companies. Acquired Integrated Solutions LLC. Eclipsed $100M revenue. Wincove PE backing drives continued growth." }
+    },
+    stakeholder: {
+      name: "Octavio Diaz", title: "Chief Executive Officer",
+      email: "info@adaptecsolutions.com", phone: "+1 585 475 1540",
+      rule: "Mid-size PE-backed integrator: CEO is primary for partnership discussions. 24 years leading manufacturing and technology companies globally.",
+      alternates: [
+        { name: "Bob Manion", title: "Executive Leader", reason: "Key executive leader at Adaptec; involved in strategic and operational decisions." },
+        { name: "Wincove Operating Partner", title: "PE Operating Partner", reason: "Drives portfolio company growth strategy and vendor relationships." }
+      ]
+    },
+    deal_keur: 300,
+    triggers: [
+      "CEO Octavio Diaz leading post-rebrand strategy \u2014 unifying Aloi, ACE, and Mainstream into one Adaptec platform",
+      "Eclipsed $100M revenue milestone in 2022 \u2014 continued growth trajectory",
+      "Acquired Integrated Solutions LLC \u2014 expanding material-handling capabilities",
+      "4 U.S. locations (Rochester NY, Lexington NC, Painted Post NY, Memphis TN) \u2014 geographic reach for multi-region projects",
+      "Wincove Private Holdings PE backing since 2016 drives continued M&A and capability investment"
+    ],
+    cheat: {
+      best_time: "Tuesday or Wednesday morning, 09:00 EST",
+      opening: "Octavio, congratulations on building the unified Adaptec platform from three legacy brands. As you standardise operations across 4 locations, we\u2019d like to discuss a KUKA System Partner relationship \u2014 preferred pricing, training, and co-marketing. Your competitors Convergix and Invio are deepening their KUKA partnerships, and Adaptec\u2019s material-handling focus is a perfect fit for KUKA\u2019s palletising and AMR portfolio. Worth 30 minutes?",
+      pains: [
+        "Unifying three legacy brands (Aloi, ACE, Mainstream) means standardising on technology partners \u2014 now is the decision window",
+        "Competitors Convergix ($250M) and Invio ($150M) are actively deepening KUKA partnerships \u2014 Adaptec risks falling behind",
+        "Material-handling automation is increasingly competitive \u2014 robot OEM partnerships are differentiators for winning bids",
+        "4 U.S. locations need consistent robot training and certification across all teams"
+      ],
+      pillars: [
+        { p: "Robot systems & integration", t: "KUKA System Partner evaluation: KR QUANTEC for palletising and material handling, LBR iisy for collaborative applications. KUKA\u2019s portfolio matches Adaptec\u2019s sweet spot." },
+        { p: "Software & digital services", t: "KUKA.Sim for standardised cell design across Adaptec\u2019s 4 locations." },
+        { p: "Service, maintenance & training", t: "KUKA College programme for Adaptec\u2019s engineering teams across all locations." }
+      ],
+      proof: [
+        "Adaptec already references KUKA robots in public materials \u2014 the brand association exists informally.",
+        "Convergix and Invio (similar PE-backed integrators) are formalising their KUKA partnerships \u2014 Adaptec can follow the same path.",
+        "KUKA System Partner programme provides tangible benefits: preferred pricing, training, and co-marketing."
+      ],
+      qa: [
+        { q: "We\u2019re still integrating three companies.", a: "Robot OEM standardisation is one of the easiest wins in post-merger integration. Octavio, your PE background means you know how much brand fragmentation costs." },
+        { q: "We\u2019re not a confirmed KUKA partner.", a: "That\u2019s exactly what this conversation is about. You already use KUKA robots \u2014 formalising the partnership gives you the same preferred pricing that Convergix and Invio enjoy." },
+        { q: "Our focus is material handling, not manufacturing.", a: "KUKA\u2019s palletising and AMR portfolio is purpose-built for material handling. KR QUANTEC is the market leader in palletising applications." }
+      ],
+      cta: "Octavio, can I arrange a KUKA System Partner evaluation meeting with our North America channel team? We\u2019d love to include Bob Manion for the technical discussion."
+    }
+  },
+  {
     id: "01-bavaria-motors",
     company: "Bavaria Motors GmbH",
     industry: "Automotive Tier 1 (powertrain)",
-    region: "Bavaria (Ingolstadt)",
+    region: "Bavaria (Ingolstadt)", geo: "Germany",
     headcount: 220, sizeBand: "mid",
     revenue_meur: 78, ebit_margin_pct: 7.2,
     growth: "Growing", ownership: "Family-owned (2nd generation)",
@@ -845,7 +1222,7 @@ const PROSPECTS = [
     id: "08-sueddeutsche-elektronik",
     company: "S\u00fcddeutsche Elektronik Montage GmbH",
     industry: "Electronics (EMS / PCB assembly)",
-    region: "Bavaria (Regensburg)",
+    region: "Bavaria (Regensburg)", geo: "Germany",
     headcount: 130, sizeBand: "mid",
     revenue_meur: 38, ebit_margin_pct: 5.8,
     growth: "Growing (PE-backed transformation)", ownership: "PE-backed (Mittelstand Capital Partners)",
@@ -904,7 +1281,7 @@ const PROSPECTS = [
     id: "04-precision-aero",
     company: "PrecisionAero Components GmbH",
     industry: "Aerospace (structural parts)",
-    region: "Hamburg",
+    region: "Hamburg", geo: "Germany",
     headcount: 175, sizeBand: "mid",
     revenue_meur: 68, ebit_margin_pct: 8.5,
     growth: "Growing", ownership: "PE-backed (Nordstern Capital)",
@@ -963,7 +1340,7 @@ const PROSPECTS = [
     id: "02-rhein-pharma",
     company: "RheinPharma Produktions GmbH",
     industry: "Pharmaceutical manufacturing",
-    region: "NRW (Leverkusen)",
+    region: "NRW (Leverkusen)", geo: "Germany",
     headcount: 145, sizeBand: "mid",
     revenue_meur: 52, ebit_margin_pct: 9.1,
     growth: "Growing", ownership: "Founder-led",
@@ -1022,7 +1399,7 @@ const PROSPECTS = [
     id: "07-norddeutsche-schweiss",
     company: "Norddeutsche Schwei\u00dftechnik GmbH",
     industry: "Metal fabrication (welding / steel construction)",
-    region: "Bremen",
+    region: "Bremen", geo: "Germany",
     headcount: 78, sizeBand: "small",
     revenue_meur: 24, ebit_margin_pct: 5.1,
     growth: "Stable", ownership: "Family-owned (founder retiring)",
@@ -1082,7 +1459,7 @@ const PROSPECTS = [
     id: "05-mueller-kunststoff",
     company: "M\u00fcller Kunststofftechnik GmbH",
     industry: "Plastics injection moulding",
-    region: "Baden-W\u00fcrttemberg (Pforzheim)",
+    region: "Baden-W\u00fcrttemberg (Pforzheim)", geo: "Germany",
     headcount: 62, sizeBand: "small",
     revenue_meur: 18, ebit_margin_pct: 6.3,
     growth: "Growing fast", ownership: "Founder-led",
@@ -1141,7 +1518,7 @@ const PROSPECTS = [
     id: "03-alpen-food",
     company: "Alpen Feinkost GmbH",
     industry: "Food processing (packaging)",
-    region: "Bavaria (Kempten / Allg\u00e4u)",
+    region: "Bavaria (Kempten / Allg\u00e4u)", geo: "Germany",
     headcount: 95, sizeBand: "mid",
     revenue_meur: 31, ebit_margin_pct: 4.8,
     growth: "Stable / modest growth", ownership: "Family-owned (3rd generation)",
@@ -1201,7 +1578,7 @@ const PROSPECTS = [
     id: "06-weber-logistik",
     company: "Weber Logistik & Fulfillment GmbH",
     industry: "Warehouse logistics / e-commerce",
-    region: "NRW (Dortmund)",
+    region: "NRW (Dortmund)", geo: "Germany",
     headcount: 310, sizeBand: "large",
     revenue_meur: 42, ebit_margin_pct: 3.2,
     growth: "Fast growth", ownership: "Founder-led",
@@ -1260,7 +1637,7 @@ const PROSPECTS = [
     id: "09-bergmann-verpackung",
     company: "Bergmann Verpackungstechnik GmbH",
     industry: "Contract packaging (consumer goods)",
-    region: "NRW (Bielefeld)",
+    region: "NRW (Bielefeld)", geo: "Germany",
     headcount: 42, sizeBand: "small",
     revenue_meur: 12, ebit_margin_pct: 7.2,
     growth: "Growing", ownership: "Founder-led",
@@ -1318,7 +1695,7 @@ const PROSPECTS = [
     id: "10-fischer-medizintechnik",
     company: "Fischer Medizintechnik GmbH",
     industry: "Medical devices (surgical instruments)",
-    region: "Baden-W\u00fcrttemberg (Tuttlingen)",
+    region: "Baden-W\u00fcrttemberg (Tuttlingen)", geo: "Germany",
     headcount: 15, sizeBand: "small",
     revenue_meur: 4.8, ebit_margin_pct: 3.5,
     growth: "Fast growth", ownership: "Founder-led",
@@ -1390,7 +1767,7 @@ const FACTOR_LABELS = {
 // State
 // ───────────────────────────────────────────────────────────
 let currentSort = { col: "rank", asc: true };
-let filters = { priority: "all", size: "all", industry: "all" };
+let filters = { priority: "all", size: "all", industry: "all", geo: "United States" };
 
 // ───────────────────────────────────────────────────────────
 // Screen 0 → animation → Screen 1
@@ -1442,9 +1819,18 @@ function initFilters() {
     o.value = i; o.textContent = i;
     indSel.appendChild(o);
   });
+  const geoSel = document.getElementById("filterGeo");
+  const geos = [...new Set(PROSPECTS.map(p => p.geo))].sort();
+  geos.forEach(g => {
+    const o = document.createElement("option");
+    o.value = g; o.textContent = g;
+    if (g === filters.geo) o.selected = true;
+    geoSel.appendChild(o);
+  });
   document.getElementById("filterPriority").addEventListener("change", e => { filters.priority = e.target.value; renderPipeline(); });
   document.getElementById("filterSize").addEventListener("change", e => { filters.size = e.target.value; renderPipeline(); });
   document.getElementById("filterIndustry").addEventListener("change", e => { filters.industry = e.target.value; renderPipeline(); });
+  document.getElementById("filterGeo").addEventListener("change", e => { filters.geo = e.target.value; renderPipeline(); });
 
   document.querySelectorAll(".prospect-table th[data-sort]").forEach(th => {
     th.addEventListener("click", () => {
@@ -1461,9 +1847,11 @@ function getFilteredSorted() {
   if (filters.priority !== "all") rows = rows.filter(r => r.priority === filters.priority);
   if (filters.size !== "all") rows = rows.filter(r => r.sizeBand === filters.size);
   if (filters.industry !== "all") rows = rows.filter(r => r.industry === filters.industry);
+  if (filters.geo !== "all") rows = rows.filter(r => r.geo === filters.geo);
   const sortMap = {
     rank: r => r.rank, company: r => r.company.toLowerCase(),
-    industry: r => r.industry.toLowerCase(), headcount: r => r.headcount,
+    industry: r => r.industry.toLowerCase(), geo: r => r.geo.toLowerCase(),
+    headcount: r => r.headcount,
     score: r => r.score, priority: r => ({High:0,Medium:1,Low:2}[r.priority]),
     anchor: r => (r.factors.look_alike.anchor || "").toLowerCase(),
     stakeholder: r => r.stakeholder.name.toLowerCase(),
@@ -1500,6 +1888,7 @@ function renderPipeline() {
       <td class="rank-cell">${p.rank}</td>
       <td><div class="company-cell">${p.company}</div></td>
       <td class="industry-cell">${p.industry}</td>
+      <td class="industry-cell">${p.geo}</td>
       <td>${p.headcount}</td>
       <td class="score-cell">
         <span class="score-bar"><span class="score-bar-fill" style="width:${p.score}%;background:${scoreColor(p.score)}"></span></span>
